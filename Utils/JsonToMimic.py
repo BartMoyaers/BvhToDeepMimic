@@ -46,6 +46,10 @@ with open(f"./Rigs/humanoidRig.json") as json_data:
 deepMimicHumanoidJoints = ["seconds", "hip", "hip", "chest", "neck", "right hip", "right knee", "right ankle",
                            "right shoulder", "right elbow", "left hip", "left knee", "left ankle", "left shoulder", "left elbow"]
 dimensions = [1, 3, 4, 4, 4, 4, 1, 4, 4, 1, 4, 1, 4, 4, 1]
+
+# how deep each mimic bone is in the json keyframes
+boneAnimLocation = []
+
 posLocked = True
 
 mypath = "./Utils/Temp/"
@@ -57,10 +61,9 @@ for j in range(0, len(onlyfiles)):
         with open(f"./OutputMimic/{onlyfiles[j]}.txt", "w") as output:
             d = json.load(json_data)
 
-            # print(d)
             Frames = int(d["Frames:"])
 
-            # For every unique time, create a keyFrame
+            # For every keyFrame
             keyFrame = []
             for i in range(0, Frames):
 
