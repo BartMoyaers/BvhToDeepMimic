@@ -72,7 +72,7 @@ for j in range(0, len(onlyfiles)):
 
                     # Property is "ReferenceTime"
                     if tokens[0] == "HIERARCHY":
-                        strToPrint = "\"HIERARCHY\": \"\""
+                        strToPrint = "\"HIERARCHY\": \"\","
 
                     # Line after this has last character "{"
                     elif nextTokens != "" and nextTokens[len(nextTokens) - 1] == "{":
@@ -83,17 +83,34 @@ for j in range(0, len(onlyfiles)):
                                 strToPrint += "_"
                         strToPrint += "\":"
 
-                    # last char is "{"
-                    elif tokens[len(tokens) - 1] == "{":
-                        strToPrint = "{"
                     else:
-                        strToPrint = "\"test\": \"\""
 
-                    # add comma if next depth == curDepth && not already have comma
-                    if x < len(content) - 1:
-                        if depthOf(content[x]) == depthOf(content[x + 1]):
-                            if strToPrint[len(strToPrint) - 1] != ",":
-                                if nextTokens != "" and nextTokens[len(nextTokens) - 1] == "{":
+                        # last char is "{"
+                        if tokens[len(tokens) - 1] == "{":
+                            strToPrint = "{"
+
+                        # last char is "}"
+                        elif tokens[len(tokens) - 1] == "}":
+                            strToPrint = "}"
+                        else:
+                            strToPrint += "\""
+                            strToPrint += tokens[0]
+                            strToPrint += "\""
+                            strToPrint += ": "
+                            strToPrint += "\""
+                            for o in range(0, len(tokens)):
+                                if o > 0:
+                                    strToPrint += tokens[o]
+                                    if o < len(tokens) - 1:
+                                        strToPrint += " "
+
+                            strToPrint += "\""
+                            # strToPrint = "\"test\": \"\""
+
+                        # add comma if next depth == curDepth && not already have comma
+                        if x < len(content) - 1:
+                            if depthOf(content[x]) == depthOf(content[x + 1]):
+                                if strToPrint[len(strToPrint) - 1] != ",":
                                     strToPrint += ","
 
                 # print(strToPrint)
