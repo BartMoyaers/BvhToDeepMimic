@@ -55,63 +55,68 @@ for j in range(0, len(onlyfiles)):
             print(f"{{", file=output)
 
             # Start of file conversion
+            hitAnimation = False
             for x in range(0, len(content)):
                 tokens = str.split(content[x])
                 tabDepth = getTabs(content[x])
                 strToPrint = ""
                 curToken = 0
                 stringLeft = ""
-                comma = True
 
-                if x < len(content) - 1:
-                    nextTokens = str.split(content[x + 1])
-                else:
-                    nextTokens = ""
-
-                if len(tokens) > 0:
-
-                    # Property is "ReferenceTime"
-                    if tokens[0] == "HIERARCHY":
-                        strToPrint = "\"HIERARCHY\": \"\","
-
-                    # Line after this has last character "{"
-                    elif nextTokens != "" and nextTokens[len(nextTokens) - 1] == "{":
-                        strToPrint += "\""
-                        for o in range(0, len(tokens)):
-                            strToPrint = strToPrint + tokens[o]
-                            if o < len(tokens) - 1:
-                                strToPrint += "_"
-                        strToPrint += "\":"
-
+                if hitAnimation == False:
+                    if x < len(content) - 1:
+                        nextTokens = str.split(content[x + 1])
                     else:
+                        nextTokens = ""
 
-                        # last char is "{"
-                        if tokens[len(tokens) - 1] == "{":
-                            strToPrint = "{"
+                    if len(tokens) > 0:
 
-                        # last char is "}"
-                        elif tokens[len(tokens) - 1] == "}":
-                            strToPrint = "}"
-                        else:
-                            strToPrint += "\""
-                            strToPrint += tokens[0]
-                            strToPrint += "\""
-                            strToPrint += ": "
+                        # Property is "ReferenceTime"
+                        if tokens[0] == "HIERARCHY":
+                            strToPrint = "\"HIERARCHY\": \"\","
+
+                        # Line after this has last character "{"
+                        elif nextTokens != "" and nextTokens[len(nextTokens) - 1] == "{":
                             strToPrint += "\""
                             for o in range(0, len(tokens)):
-                                if o > 0:
-                                    strToPrint += tokens[o]
-                                    if o < len(tokens) - 1:
-                                        strToPrint += " "
+                                strToPrint = strToPrint + tokens[o]
+                                if o < len(tokens) - 1:
+                                    strToPrint += "_"
+                            strToPrint += "\":"
 
-                            strToPrint += "\""
-                            # strToPrint = "\"test\": \"\""
+                        else:
 
-                        # add comma if next depth == curDepth && not already have comma
-                        if x < len(content) - 1:
-                            if depthOf(content[x]) == depthOf(content[x + 1]):
-                                if strToPrint[len(strToPrint) - 1] != ",":
-                                    strToPrint += ","
+                            # last char is "{"
+                            if tokens[len(tokens) - 1] == "{":
+                                strToPrint = "{"
+
+                            # last char is "}"
+                            elif tokens[len(tokens) - 1] == "}":
+                                strToPrint = "}"
+                            else:
+                                strToPrint += "\""
+                                strToPrint += tokens[0]
+                                strToPrint += "\""
+                                strToPrint += ": "
+                                strToPrint += "\""
+                                for o in range(0, len(tokens)):
+                                    if o > 0:
+                                        strToPrint += tokens[o]
+                                        if o < len(tokens) - 1:
+                                            strToPrint += " "
+
+                                strToPrint += "\""
+                                # strToPrint = "\"test\": \"\""
+
+                            # add comma if next depth == curDepth && not already have comma
+                            if x < len(content) - 1:
+                                if depthOf(content[x]) == depthOf(content[x + 1]):
+                                    if strToPrint[len(strToPrint) - 1] != ",":
+                                        strToPrint += ","
+
+                # hitAnimation == true
+                else:
+                    print("")
 
                 # print(strToPrint)
                 # If something to print
