@@ -75,6 +75,23 @@ for j in range(0, len(onlyfiles)):
                         if tokens[0] == "HIERARCHY":
                             strToPrint = "\"HIERARCHY\": \"\","
 
+                        # Property is "Frame"
+                        elif tokens[0] == "Frame":
+                            hitAnimation = True
+                            strToPrint += "\""
+                            strToPrint += tokens[0]
+                            strToPrint += "\""
+                            strToPrint += ": "
+                            strToPrint += "\""
+                            for o in range(0, len(tokens)):
+                                if o > 0:
+                                    strToPrint += tokens[o]
+                                    if o < len(tokens) - 1:
+                                        strToPrint += " "
+                            strToPrint += "\","
+                            strToPrint += "\n \"Keyframes\":"
+                            strToPrint += "["
+
                         # Line after this has last character "{"
                         elif nextTokens != "" and nextTokens[len(nextTokens) - 1] == "{":
                             strToPrint += "\""
@@ -104,9 +121,7 @@ for j in range(0, len(onlyfiles)):
                                         strToPrint += tokens[o]
                                         if o < len(tokens) - 1:
                                             strToPrint += " "
-
                                 strToPrint += "\""
-                                # strToPrint = "\"test\": \"\""
 
                             # add comma if next depth == curDepth && not already have comma
                             if x < len(content) - 1:
@@ -116,13 +131,27 @@ for j in range(0, len(onlyfiles)):
 
                 # hitAnimation == true
                 else:
-                    print("")
+                    strToPrint += "["
+                    for o in range(0, len(tokens) - 1):
+                        strToPrint += tokens[o]
+                        strToPrint += ", "
+                    strToPrint += tokens[len(tokens) - 1]
+                    strToPrint += "]"
+
+                    # add comma if next depth == curDepth && not already have comma
+                    if x < len(content) - 1:
+                        if depthOf(content[x]) == depthOf(content[x + 1]):
+                            if strToPrint[len(strToPrint) - 1] != ",":
+                                strToPrint += ","
 
                 # print(strToPrint)
                 # If something to print
                 if strToPrint != "":
                     strToPrint = f"{tabDepth}{strToPrint}"
                     print(f"{strToPrint}", file=output)
+
+            # End array
+            print(f"]", file=output)
 
             # End JSON object
             print(f"}}", file=output)
