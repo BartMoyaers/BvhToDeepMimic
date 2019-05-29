@@ -61,8 +61,46 @@ for j in range(0, len(onlyfiles)):
                 strToPrint = ""
                 curToken = 0
                 stringLeft = ""
+                comma = True
 
-                print(f"Depth:{tabDepth}t")
+                if x < len(content) - 1:
+                    nextTokens = str.split(content[x + 1])
+                else:
+                    nextTokens = ""
+
+                if len(tokens) > 0:
+
+                    # Property is "ReferenceTime"
+                    if tokens[0] == "HIERARCHY":
+                        strToPrint = "\"HIERARCHY\": \"\""
+
+                    # Line after this has last character "{"
+                    elif nextTokens != "" and nextTokens[len(nextTokens) - 1] == "{":
+                        strToPrint += "\""
+                        for o in range(0, len(tokens)):
+                            strToPrint = strToPrint + tokens[o]
+                            if o < len(tokens) - 1:
+                                strToPrint += "_"
+                        strToPrint += "\":"
+
+                    # last char is "{"
+                    elif tokens[len(tokens) - 1] == "{":
+                        strToPrint = "{"
+                    else:
+                        strToPrint = "\"test\": \"\""
+
+                    # add comma if next depth == curDepth && not already have comma
+                    if x < len(content) - 1:
+                        if depthOf(content[x]) == depthOf(content[x + 1]):
+                            if strToPrint[len(strToPrint) - 1] != ",":
+                                if nextTokens != "" and nextTokens[len(nextTokens) - 1] == "{":
+                                    strToPrint += ","
+
+                # print(strToPrint)
+                # If something to print
+                if strToPrint != "":
+                    strToPrint = f"{tabDepth}{strToPrint}"
+                    print(f"{strToPrint}", file=output)
 
             # End JSON object
             print(f"}}", file=output)
