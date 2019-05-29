@@ -5,6 +5,7 @@
 import os
 from os import listdir
 from os.path import isfile, join
+import time
 
 # Function declarations
 # ===========================================================================
@@ -52,6 +53,16 @@ for j in range(0, len(onlyfiles)):
 
             # Start JSON object
             print(f"{{", file=output)
+
+            # Start of file conversion
+            for x in range(0, len(content)):
+                tokens = str.split(content[x])
+                tabDepth = getTabs(content[x])
+                strToPrint = ""
+                curToken = 0
+                stringLeft = ""
+
+                print(f"Depth:{tabDepth}t")
 
             # End JSON object
             print(f"}}", file=output)

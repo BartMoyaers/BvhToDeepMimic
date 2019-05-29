@@ -3,7 +3,7 @@
 import numpy as np
 
 # Function declarations
-#===========================================================================\
+#===========================================================================
 
 def euler_to_quaternion(heading, attitude, bank):
     c1 = np.cos(heading/2)
