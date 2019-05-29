@@ -19,4 +19,4 @@ def removeAllFilesInDirectory(directory):
 removeAllFilesInDirectory("./OutputMimic/")
 
 os.system("python ./Utils/BvhToJson.py")
-# os.system("python ./Utils/JsonToMimic.py")
+os.system("python ./Utils/JsonToMimic.py")
