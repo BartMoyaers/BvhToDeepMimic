@@ -8,6 +8,12 @@ The [DeepMimic project](https://github.com/xbpeng/DeepMimic) currently offers no
 
 [FbxToMimic](https://github.com/SleepingFox88/FbxToMimic)
 
+## Dependencies
+
+Python `sudo apt install python`
+
+numpy `pip install numpy`
+
 ## Creating a humanoid rig
 
 Currently joints in .bvh files have to be manually assigned by name to the corresponding joints in the Mimic Motion humanoid rig. This is done by assigning .bvh model's bone names to the corresponding joint properties in [./Rigs/humanoidRig.json](./Rigs/humanoidRig.json)
