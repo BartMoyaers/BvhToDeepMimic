@@ -6,7 +6,7 @@ The [DeepMimic project](https://github.com/xbpeng/DeepMimic) currently offers no
 
 ## Related Projects
 
-[FbxToMimic](https://github.com/SleepingFox88/FbxToMimic)
+[List of related projects](https://github.com/SleepingFox88/DeepMimic-Animation-Conversion)
 
 ## Dependencies
 
