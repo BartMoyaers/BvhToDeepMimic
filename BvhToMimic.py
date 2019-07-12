@@ -92,8 +92,11 @@ for j in range(0, len(onlyfiles)):
                     # Z
                     keyFrame.append(mocap.frame_joint_channel(
                         i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Zposition'))
-                # elif dimensions[p] == 1:
-                #     keyFrame.append()
-                    # print(bvhBoneName(deepMimicHumanoidJoints[p]))
+                elif dimensions[p] == 1:
+                    # X
+                    keyFrame.append(mocap.frame_joint_channel(
+                        i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Xposition'))
+                elif dimensions[p] == 4:
+                    keyFrame.append(0)  # placeholder
 
             print(i, keyFrame)
