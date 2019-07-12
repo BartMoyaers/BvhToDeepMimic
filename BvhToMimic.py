@@ -83,20 +83,34 @@ for j in range(0, len(onlyfiles)):
 
                 # Append root position
                 elif p == 1:
-                    # X
                     keyFrame.append(mocap.frame_joint_channel(
                         i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Xposition'))
-                    # Y
                     keyFrame.append(mocap.frame_joint_channel(
                         i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Yposition'))
-                    # Z
                     keyFrame.append(mocap.frame_joint_channel(
                         i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Zposition'))
+
                 elif dimensions[p] == 1:
-                    # X
                     keyFrame.append(mocap.frame_joint_channel(
                         i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Xposition'))
+
                 elif dimensions[p] == 4:
-                    keyFrame.append(0)  # placeholder
+                    x = mocap.frame_joint_channel(
+                        i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Xposition')
+                    y = mocap.frame_joint_channel(
+                        i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Yposition')
+                    z = mocap.frame_joint_channel(
+                        i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Zposition')
+
+                    pitch = y
+                    yaw = x
+                    roll = z
+
+                    quaternion = euler_to_quaternion(math.radians(
+                        yaw), math.radians(pitch), math.radians(roll))
+                    keyFrame.append(quaternion[0])
+                    keyFrame.append(quaternion[1])
+                    keyFrame.append(quaternion[2])
+                    keyFrame.append(quaternion[3])
 
             print(i, keyFrame)
