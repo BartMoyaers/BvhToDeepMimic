@@ -1,15 +1,15 @@
 {
-  "hip": "Character1_Hips",
-  "chest": "Character1_Spine2",
-  "neck": "Character1_Neck",
-  "right hip": "Character1_RightUpLeg",
-  "right knee": "Character1_RightLeg",
-  "right ankle": "Character1_RightFoot",
-  "right shoulder": "Character1_RightArm",
-  "right elbow": "Character1_RightForeArm",
-  "left hip": "Character1_LeftUpLeg",
-  "left knee": "Character1_LeftLeg",
-  "left ankle": "Character1_LeftFoot",
-  "left shoulder": "Character1_LeftArm",
-  "left elbow": "Character1_LeftForeArm"
+  "hip": "Hips",
+  "chest": "Spine",
+  "neck": "Neck",
+  "right hip": "RightUpLeg",
+  "right knee": "RightLeg",
+  "right ankle": "RightFoot",
+  "right shoulder": "RightArm",
+  "right elbow": "RightForeArm",
+  "left hip": "LeftUpLeg",
+  "left knee": "LeftLeg",
+  "left ankle": "LeftFoot",
+  "left shoulder": "LeftArm",
+  "left elbow": "LeftForeArm"
 }
