@@ -61,56 +61,84 @@ posLocked = True
 mypath = "./inputBvh/"
 onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
+
 # Start of main program
 # ===========================================================================
 
 # for all files to convert
 for j in range(0, len(onlyfiles)):
 
-    # open file to convert
-    with open("./inputBvh/" + onlyfiles[j]) as f:
-        mocap = Bvh(f.read())
+    with open(f"./OutputMimic/{onlyfiles[j]}.txt", "w") as output:
 
-        # For every keyFrame
-        for i in range(0, mocap.nframes):
-            keyFrame = []
+        # File Header
+        print(f"{{", file=output)
+        print(f"\"Loop\": \"none\",", file=output)
+        print(f"\"Frames\":", file=output)
+        print(f"[", file=output)
 
-            # for all DeepMimicHumanoid Joints
-            for p in range(0, len(deepMimicHumanoidJoints)):
-                # Append Time
-                if p == 0:
-                    keyFrame.append(mocap.frame_time)
+        # open file to convert
+        with open("./inputBvh/" + onlyfiles[j]) as f:
+            mocap = Bvh(f.read())
 
-                # Append root position
-                elif p == 1:
-                    keyFrame.append(mocap.frame_joint_channel(
-                        i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Xposition'))
-                    keyFrame.append(mocap.frame_joint_channel(
-                        i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Yposition'))
-                    keyFrame.append(mocap.frame_joint_channel(
-                        i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Zposition'))
+            # For every keyFrame
+            for i in range(0, mocap.nframes):
+                keyFrame = []
 
-                elif dimensions[p] == 1:
-                    keyFrame.append(mocap.frame_joint_channel(
-                        i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Xposition'))
+                # for all DeepMimicHumanoid Joints
+                for p in range(0, len(deepMimicHumanoidJoints)):
+                    # Append Time
+                    if p == 0:
+                        keyFrame.append(mocap.frame_time)
 
-                elif dimensions[p] == 4:
-                    x = mocap.frame_joint_channel(
-                        i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Xposition')
-                    y = mocap.frame_joint_channel(
-                        i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Yposition')
-                    z = mocap.frame_joint_channel(
-                        i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Zposition')
+                    # Append root position
+                    elif p == 1:
+                        keyFrame.append(mocap.frame_joint_channel(
+                            i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Xposition'))
+                        keyFrame.append(mocap.frame_joint_channel(
+                            i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Yposition'))
+                        keyFrame.append(mocap.frame_joint_channel(
+                            i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Zposition'))
 
-                    pitch = y
-                    yaw = x
-                    roll = z
+                    elif dimensions[p] == 1:
+                        keyFrame.append(mocap.frame_joint_channel(
+                            i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Xposition'))
 
-                    quaternion = euler_to_quaternion(math.radians(
-                        yaw), math.radians(pitch), math.radians(roll))
-                    keyFrame.append(quaternion[0])
-                    keyFrame.append(quaternion[1])
-                    keyFrame.append(quaternion[2])
-                    keyFrame.append(quaternion[3])
+                    elif dimensions[p] == 4:
+                        x = mocap.frame_joint_channel(
+                            i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Xposition')
+                        y = mocap.frame_joint_channel(
+                            i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Yposition')
+                        z = mocap.frame_joint_channel(
+                            i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Zposition')
 
-            print(i, keyFrame)
+                        # bindings from blender test
+                        pitch = x
+                        yaw = y
+                        roll = z
+
+                        quaternion = euler_to_quaternion(math.radians(
+                            yaw), math.radians(pitch), math.radians(roll))
+                        keyFrame.append(quaternion[0])
+                        keyFrame.append(quaternion[1])
+                        keyFrame.append(quaternion[2])
+                        keyFrame.append(quaternion[3])
+
+                # Turn keyFrame into a recordable JSON String
+                keyFrameString = "["
+                keyFrameString += str(keyFrame[0])
+
+                for x in range(0, len(keyFrame)):
+                    if x > 0:
+                        keyFrameString += ","
+                        keyFrameString += str(keyFrame[x])
+
+                # Put comma at end of all keyFrame lines but the last
+                keyFrameString += "]"
+                if i < mocap.nframes - 1:
+                    keyFrameString += ","
+
+                print(f"{keyFrameString}", file=output)
+
+            # Close JSON object
+            print(f"]", file=output)
+            print(f"}}", file=output)
