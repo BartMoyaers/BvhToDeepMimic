@@ -116,9 +116,6 @@ for j in range(0, len(onlyfiles)):
                         z = mocap.frame_joint_channel(
                             i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Zrotation')
 
-                        print(deepMimicHumanoidJoints[p])
-                        print("XYZ: ", x, y, z)
-
                         # bindings from blender test
                         pitch = x
                         yaw = y
