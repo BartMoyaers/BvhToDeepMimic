@@ -106,21 +106,18 @@ for j in range(0, len(onlyfiles)):
 
                     elif dimensions[p] == 1:
                         keyFrame.append(math.radians(mocap.frame_joint_channel(
-                            i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Xposition')))
+                            i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Xrotation')))
 
                     elif dimensions[p] == 4:
                         x = mocap.frame_joint_channel(
-                            i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Xposition')
+                            i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Xrotation')
                         y = mocap.frame_joint_channel(
-                            i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Yposition')
+                            i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Yrotation')
                         z = mocap.frame_joint_channel(
-                            i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Zposition')
+                            i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Zrotation')
 
-                        # if deepMimicHumanoidJoints[p] == "right shoulder":
-                        #     print("XYZ: ", x, y, z)
-
-                        # print(deepMimicHumanoidJoints[p])
-                        # print("XYZ: ", x, y, z)
+                        print(deepMimicHumanoidJoints[p])
+                        print("XYZ: ", x, y, z)
 
                         # bindings from blender test
                         pitch = x
