@@ -92,12 +92,17 @@ for j in range(0, len(onlyfiles)):
 
                     # Append root position
                     elif p == 1:
-                        keyFrame.append(mocap.frame_joint_channel(
-                            i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Xposition'))
-                        keyFrame.append(mocap.frame_joint_channel(
-                            i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Yposition'))
-                        keyFrame.append(mocap.frame_joint_channel(
-                            i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Zposition'))
+                        if posLocked:
+                            keyFrame.append(0)
+                            keyFrame.append(0)
+                            keyFrame.append(0)
+                        else:
+                            keyFrame.append(mocap.frame_joint_channel(
+                                i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Xposition'))
+                            keyFrame.append(mocap.frame_joint_channel(
+                                i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Yposition'))
+                            keyFrame.append(mocap.frame_joint_channel(
+                                i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Zposition'))
 
                     elif dimensions[p] == 1:
                         keyFrame.append(mocap.frame_joint_channel(
