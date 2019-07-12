@@ -93,9 +93,9 @@ for j in range(0, len(onlyfiles)):
                     # Append root position
                     elif p == 1:
                         if posLocked:
-                            keyFrame.append(0)
-                            keyFrame.append(0)
-                            keyFrame.append(0)
+                            keyFrame.append(2)
+                            keyFrame.append(2)
+                            keyFrame.append(2)
                         else:
                             keyFrame.append(mocap.frame_joint_channel(
                                 i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Xposition'))
