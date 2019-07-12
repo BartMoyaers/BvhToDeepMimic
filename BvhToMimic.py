@@ -12,8 +12,6 @@ from os.path import isfile, join
 # Function declarations
 # ===========================================================================
 
-# Remove all files in given directory
-
 
 def removeAllFilesInDirectory(directory):
     onlyfiles = [f for f in listdir(directory) if isfile(join(directory, f))]
