@@ -1,2 +1,4 @@
 #output files
 OutputMimic/
+
+__pycache__/
