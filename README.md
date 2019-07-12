@@ -8,6 +8,10 @@ The [DeepMimic project](https://github.com/xbpeng/DeepMimic) currently offers no
 
 [List of related projects](https://github.com/SleepingFox88/DeepMimic-Animation-Conversion)
 
+## Progress so far
+
+![walkTest1](./Assets/walkTest1.gif)
+
 ## Dependencies
 
 Python `sudo apt install python`
