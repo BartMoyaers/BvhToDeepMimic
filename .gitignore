@@ -1,4 +1,6 @@
 #output files
 OutputMimic/
 
+# python
 __pycache__/
+*.pyc
