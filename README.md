@@ -34,4 +34,4 @@ I am currently unaware of how to create or use any algorithms that know how to a
 python BvhToMimic.py
 ```
 
-Will convert all .bvh files located in /InputFbx/ into Mimic Motion files, located in /OutputMimic/
+Will convert all .bvh files located in /InputBvh/ into Mimic Motion files, located in /OutputMimic/
