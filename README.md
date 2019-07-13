@@ -16,6 +16,8 @@ The [DeepMimic project](https://github.com/xbpeng/DeepMimic) currently offers no
 
 ![manualOffsetTest](./Assets/manualOffsetTest.gif)
 
+[link to branch](https://github.com/SleepingFox88/BvhToMimic/tree/manual-offset-experimentation)
+
 ## Dependencies
 
 Python `sudo apt install python`
