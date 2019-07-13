@@ -12,6 +12,10 @@ The [DeepMimic project](https://github.com/xbpeng/DeepMimic) currently offers no
 
 ![walkTest1](./Assets/walkTest1.gif)
 
+### [experimental] manual offset test:
+
+![manualOffsetTest](./Assets/manualOffsetTest.gif)
+
 ## Dependencies
 
 Python `sudo apt install python`
