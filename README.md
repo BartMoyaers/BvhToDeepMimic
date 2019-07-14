@@ -14,9 +14,9 @@ The [DeepMimic project](https://github.com/xbpeng/DeepMimic) currently offers no
 
 ### [experimental] manual offset test:
 
-![manualOffsetTest](./Assets/manualOffsetTest.gif)
-
 [link to branch](https://github.com/SleepingFox88/BvhToMimic/tree/manual-offset-experimentation)
+
+![manualOffsetTest](./Assets/manualOffsetTest.gif)
 
 ## Dependencies
 
