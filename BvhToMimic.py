@@ -42,8 +42,11 @@ def bvhBoneName(mimicBone):
 
 # Initialization
 # ===========================================================================
+dirname = "./OutputMimic/"
+if not os.path.exists(dirname):
+    os.makedirs(dirname)
 
-removeAllFilesInDirectory("./OutputMimic/")
+removeAllFilesInDirectory(dirname)
 
 # get json of humanoidRig
 with open(f"./Rigs/humanoidRig.json") as json_data:
@@ -71,11 +74,8 @@ for j in range(0, len(onlyfiles)):
 
     with open(f"./OutputMimic/{onlyfiles[j]}.txt", "w") as output:
 
-        # File Header
-        print(f"{{", file=output)
-        print(f"\"Loop\": \"none\",", file=output)
-        print(f"\"Frames\":", file=output)
-        print(f"[", file=output)
+        # list containing all the frames
+        frames = []
 
         # open file to convert
         with open("./inputBvh/" + onlyfiles[j]) as f:
@@ -130,22 +130,12 @@ for j in range(0, len(onlyfiles)):
                         keyFrame.append(quaternion[2])
                         keyFrame.append(quaternion[3])
 
-                # Turn keyFrame into a recordable JSON String
-                keyFrameString = "["
-                keyFrameString += str(keyFrame[0])
+                frames.append(keyFrame)
 
-                for x in range(0, len(keyFrame)):
-                    if x > 0:
-                        keyFrameString += ","
-                        keyFrameString += str(keyFrame[x])
+            # output in dictionary format for easy json dump
+            outputDict = {
+                "Loop": "none", # "none" or "wrap"
+                "Frames": frames
+            }
 
-                # Put comma at end of all keyFrame lines but the last
-                keyFrameString += "]"
-                if i < mocap.nframes - 1:
-                    keyFrameString += ","
-
-                print(f"{keyFrameString}", file=output)
-
-            # Close JSON object
-            print(f"]", file=output)
-            print(f"}}", file=output)
+            json.dump(outputDict, output, indent=4)
