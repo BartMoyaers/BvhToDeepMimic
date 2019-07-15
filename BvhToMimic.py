@@ -42,8 +42,11 @@ def bvhBoneName(mimicBone):
 
 # Initialization
 # ===========================================================================
+dirname = "./OutputMimic/"
+if not os.path.exists(dirname):
+    os.makedirs(dirname)
 
-removeAllFilesInDirectory("./OutputMimic/")
+removeAllFilesInDirectory(dirname)
 
 # get json of humanoidRig
 with open(f"./Rigs/humanoidRig.json") as json_data:
