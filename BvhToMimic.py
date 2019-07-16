@@ -9,6 +9,7 @@ import os
 from os import listdir
 from os.path import isfile, join
 from tqdm import tqdm
+from pyquaternion import Quaternion
 
 # Function declarations
 # ===========================================================================
@@ -35,6 +36,21 @@ def euler_to_quaternion(heading, attitude, bank):
     z = c1*s2*c3 - s1*c2*s3
     return [w, x, y, z]
 
+def EulerXYZToQuaternion(Xangle, Yangle, Zangle):
+    cy = math.cos(Xangle * 0.5)
+    sy = math.sin(Xangle * 0.5)
+    cp = math.cos(Yangle * 0.5)
+    sp = math.sin(Yangle * 0.5)
+    cr = math.cos(Zangle * 0.5)
+    sr = math.sin(Zangle * 0.5)
+
+    q = Quaternion()
+    q[0] = cy * cp * cr + sy * sp * sr
+    q[1] = cy * cp * sr - sy * sp * cr
+    q[2] = sy * cp * sr + cy * sp * cr
+    q[3] = sy * cp * cr - cy * sp * sr
+
+    return q
 
 def bvhBoneName(mimicBone):
     return humanoidRig[f"{mimicBone}"]
@@ -118,13 +134,10 @@ for j in range(0, len(onlyfiles)):
                         z = mocap.frame_joint_channel(
                             i, bvhBoneName(deepMimicHumanoidJoints[p]), 'Zrotation')
 
-                        # bindings from blender test
-                        pitch = x
-                        yaw = y
-                        roll = z
+                        quaternion = EulerXYZToQuaternion(
+                            math.radians(x), math.radians(y), math.radians(z)
+                        )
 
-                        quaternion = euler_to_quaternion(math.radians(
-                            yaw), math.radians(pitch), math.radians(roll))
                         keyFrame.append(quaternion[0])
                         keyFrame.append(quaternion[1])
                         keyFrame.append(quaternion[2])
