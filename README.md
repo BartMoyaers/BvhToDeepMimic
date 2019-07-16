@@ -28,6 +28,8 @@ bvh `pip install bvh`
 
 tqdm `pip install tqdm`
 
+pyquaternion `pip install pyquaternion`
+
 ## Creating a humanoid rig
 
 Currently joints in .bvh files have to be manually assigned by name to the corresponding joints in the Mimic Motion humanoid rig. This is done by assigning .bvh model's bone names to the corresponding joint properties in [./Rigs/humanoidRig.json](./Rigs/humanoidRig.json)
