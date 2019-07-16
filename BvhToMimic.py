@@ -138,6 +138,10 @@ for j in range(0, len(onlyfiles)):
                             math.radians(x), math.radians(y), math.radians(z)
                         )
 
+                        # rotate by 180 degrees around y axis to coincide with DeepMimic axes.
+                        yRot = EulerXYZToQuaternion(0, math.radians(180), 0)
+                        quaternion = yRot * quaternion
+
                         keyFrame.append(quaternion[0])
                         keyFrame.append(quaternion[1])
                         keyFrame.append(quaternion[2])
