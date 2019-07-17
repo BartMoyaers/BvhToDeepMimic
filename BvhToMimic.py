@@ -2,15 +2,10 @@
 # ===========================================================================
 
 from bvh import Bvh
-import numpy as np
-import math
 import json
 import os
 from os import listdir
 from os.path import isfile, join
-from tqdm import tqdm
-from pyquaternion import Quaternion
-from typing import List
 from BvhJointHandler import BvhJointHandler
 
 # Function declarations
