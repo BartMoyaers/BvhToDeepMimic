@@ -105,7 +105,7 @@ class BvhJointHandler:
             "neck": [0,1,0],
             "right hip": [0,-1,0],
             "right knee": [0,0,0],
-            "right ankle": [0,0,1],
+            "right ankle": [0,0,0],
             "right shoulder": [0,-1,0],
             "right elbow": [0,0,0],
             "left hip": [0,-1,0],
