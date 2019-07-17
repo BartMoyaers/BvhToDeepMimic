@@ -207,6 +207,7 @@ class BvhJointHandler:
 
         if jointInfo.dimensions > 1:
             rotation = JointInfo.EulerXYZToQuaternion(eulerAngles[0], eulerAngles[1], eulerAngles[2])
+            rotation[3] = -rotation[3]
             offset = jointInfo.offsetQuat
             yRot = JointInfo.EulerXYZToQuaternion(0,180,0)
             
@@ -216,4 +217,4 @@ class BvhJointHandler:
             assert jointInfo.dimensions == 1
             # TODO: check if this is really always the X rotation
             # (Maybe needs some kind of projection)
-            return [math.radians(eulerAngles[0])]
+            return [-math.radians(eulerAngles[0])]
