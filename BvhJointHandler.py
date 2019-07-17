@@ -210,7 +210,7 @@ class BvhJointHandler:
             offset = jointInfo.offsetQuat
             yRot = JointInfo.EulerXYZToQuaternion(0,180,0)
             
-            result = yRot * (offset * rotation)
+            result = offset * rotation
             return result.elements
         else:
             assert jointInfo.dimensions == 1
