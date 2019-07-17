@@ -8,6 +8,9 @@ from tqdm import tqdm
 
 
 class JointInfo:
+    """ Contains information on a certain joint in the DeepMimic human model as 
+    well as some functions in order to convert joint data from BVH to DeepMimic.
+    """
     def __init__(self, deepMimicName: str, bvhName: str, dimensions: int,
                  zeroRotVector: List[float], childOffset: List[float]):
         self.deepMimicName = deepMimicName
@@ -39,7 +42,7 @@ class JointInfo:
         else:
             perpvec = np.array([1,0,0])
             angle = 0
-
+        
         result = Quaternion(axis=perpvec, radians=angle)
 
         # Note that this quaternion is defined in the frame of the BVH file.
@@ -77,6 +80,8 @@ class JointInfo:
         return q
 
 class BvhJointHandler:
+    """ Handles conversion of BVH files to DeepMimic format.
+    """
     def __init__(self, mocap: Bvh, rigPath="./Rigs/humanoidRig.json", posLocked=False):
         self.mocap = mocap
         self.posLocked = posLocked
