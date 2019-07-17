@@ -32,15 +32,18 @@ class JointInfo:
 
         # Calculate perpendicular vector
         perpvec = np.cross(v1, v2)
+        perpnorm = np.linalg.norm(perpvec)
+        if perpnorm > 0:
+            perpvec = perpvec / perpnorm
+            angle = math.acos(np.dot(v1, v2))
+        else:
+            perpvec = np.array([1,0,0])
+            angle = 0
 
-        x = perpvec[0]
-        y = perpvec[1]
-        z = perpvec[2]
-        # w = math.sqrt(np.linalg.norm(v1) ** 2 + np.linalg.norm(v2) ** 2) + np.dot(v1, v2)
-        w = math.sqrt(2) + np.dot(v1, v2)
+        result = Quaternion(axis=perpvec, radians=angle)
 
         # Note that this quaternion is defined in the frame of the BVH file.
-        return self.quatBvhToDM(Quaternion(w, x, y, z).unit)
+        return self.quatBvhToDM(result)
 
     @staticmethod
     def quatBvhToDM(quaternion: Quaternion) -> Quaternion:
@@ -202,7 +205,7 @@ class BvhJointHandler:
             offset = jointInfo.offsetQuat
             yRot = JointInfo.EulerXYZToQuaternion(0,180,0)
             
-            result = yRot * offset * rotation
+            result = yRot * (offset * rotation)
             return result.elements
         else:
             assert jointInfo.dimensions == 1
