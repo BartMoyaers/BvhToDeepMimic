@@ -43,6 +43,7 @@ class JointInfo:
             perpvec = np.array([1,0,0])
             angle = 0
         
+        # Calculate quaternion from angle axis form.
         result = Quaternion(axis=perpvec, radians=angle)
 
         # Note that this quaternion is defined in the frame of the BVH file.
@@ -95,6 +96,8 @@ class BvhJointHandler:
         }
 
         self.jointChildDict = {
+            # TODO: expand BVH parser to allow to get child joints
+            # Child joints are necessary to be able to compute the offset quaternions correctly.
             "Hips": "Hips",
             "Spine": "Spine1",
             "Neck": "Head",
@@ -180,14 +183,19 @@ class BvhJointHandler:
         return result
 
     def getJointRotation(self, frameNumber: int, jointInfo: JointInfo) -> List[float]:
+        # Get the order of channel names as desribed in BVH file for this joint.
         channels = self.mocap.joint_channels(jointInfo.bvhName)
+        # Only keep the rotation channels
         channels = list(filter(lambda x: x in self.rotationChannelNames, channels))
 
+        # Get the X, Y, Z euler angles
         eulerAngles = []
         for channel in self.rotationChannelNames:
             eulerAngles.append(self.mocap.frame_joint_channel(frameNumber, jointInfo.bvhName, channel))
 
+        # Calculate joint rotations
         if jointInfo.dimensions > 1:
+            # 4D (quaternion) DeepMimic joint
             rotation = self.eulerToQuat(eulerAngles, channels)
             rotation = JointInfo.quatBvhToDM(rotation)
 
@@ -196,15 +204,19 @@ class BvhJointHandler:
             result = offset * rotation
             return result.elements
         else:
+            # 1D DeepMimic joint
             assert jointInfo.dimensions == 1
-            # TODO: check if this is really always the X rotation
-            # (Maybe needs some kind of projection)
+            # TODO: calculate this angle correctly (keep all DOF's into account)
             return [-math.radians(eulerAngles[0])]
 
     def eulerToQuat(self, angles: List[float], channels: List[str]):
+        # Convert angles to radians
         Xangle = math.radians(angles[0])
         Yangle = math.radians(angles[1])
         Zangle = math.radians(angles[2])
+
+        # Create the rotation matrix for every euler angle
+        # See: https://en.wikipedia.org/wiki/Rotation_matrix#In_three_dimensions
         Xrot = np.array(
             [
                 [1,0,0],
@@ -227,16 +239,19 @@ class BvhJointHandler:
             ]
         )
 
+        # Connect the rotation channel names to corresponding matrices
         rotationDict = {
             self.rotationChannelNames[0]: Xrot,
             self.rotationChannelNames[1]: Yrot,
             self.rotationChannelNames[2]: Zrot
         }
 
+        # Compute the final rotation matrix in the order as the BVH file describes.
         rotationMatrix = rotationDict[channels[2]].dot(
             rotationDict[channels[1]].dot(
                 rotationDict[channels[0]]
             )
         )
 
+        # Return the corresponding quaternion
         return Quaternion(matrix=rotationMatrix)
