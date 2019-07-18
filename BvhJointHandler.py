@@ -58,27 +58,6 @@ class JointInfo:
             -quaternion[1]
         )
 
-    @staticmethod
-    def EulerXYZToQuaternion(Xangle, Yangle, Zangle) -> Quaternion:
-        X = math.radians(Xangle)
-        Y = math.radians(Yangle)
-        Z = math.radians(Zangle)
-
-        cy = math.cos(X * 0.5)
-        sy = math.sin(X * 0.5)
-        cp = math.cos(Y * 0.5)
-        sp = math.sin(Y * 0.5)
-        cr = math.cos(Z * 0.5)
-        sr = math.sin(Z * 0.5)
-
-        q = Quaternion()
-        q[0] = cy * cp * cr + sy * sp * sr
-        q[1] = cy * cp * sr - sy * sp * cr
-        q[2] = sy * cp * sr + cy * sp * cr
-        q[3] = sy * cp * cr - cy * sp * sr
-
-        return q
-
 class BvhJointHandler:
     """ Handles conversion of BVH files to DeepMimic format.
     """
@@ -201,13 +180,17 @@ class BvhJointHandler:
         return result
 
     def getJointRotation(self, frameNumber: int, jointInfo: JointInfo) -> List[float]:
+        channels = self.mocap.joint_channels(jointInfo.bvhName)
+        channels = list(filter(lambda x: x in self.rotationChannelNames, channels))
+
         eulerAngles = []
         for channel in self.rotationChannelNames:
             eulerAngles.append(self.mocap.frame_joint_channel(frameNumber, jointInfo.bvhName, channel))
 
         if jointInfo.dimensions > 1:
-            rotation = JointInfo.EulerXYZToQuaternion(eulerAngles[0], eulerAngles[1], eulerAngles[2])
-            rotation[3] = -rotation[3]
+            rotation = self.eulerToQuat(eulerAngles, channels)
+            rotation = JointInfo.quatBvhToDM(rotation)
+
             offset = jointInfo.offsetQuat
             
             result = offset * rotation
@@ -217,3 +200,43 @@ class BvhJointHandler:
             # TODO: check if this is really always the X rotation
             # (Maybe needs some kind of projection)
             return [-math.radians(eulerAngles[0])]
+
+    def eulerToQuat(self, angles: List[float], channels: List[str]):
+        Xangle = math.radians(angles[0])
+        Yangle = math.radians(angles[1])
+        Zangle = math.radians(angles[2])
+        Xrot = np.array(
+            [
+                [1,0,0],
+                [0, math.cos(Xangle), -math.sin(Xangle)],
+                [0, math.sin(Xangle), math.cos(Xangle)]
+            ]
+        )
+        Yrot = np.array(
+            [
+                [math.cos(Yangle), 0, math.sin(Yangle)],
+                [0, 1, 0],
+                [-math.sin(Yangle), 0, math.cos(Yangle)]
+            ]
+        )
+        Zrot = np.array(
+            [
+                [math.cos(Zangle), -math.sin(Zangle), 0],
+                [math.sin(Zangle), math.cos(Zangle), 0],
+                [0, 0, 1]
+            ]
+        )
+
+        rotationDict = {
+            self.rotationChannelNames[0]: Xrot,
+            self.rotationChannelNames[1]: Yrot,
+            self.rotationChannelNames[2]: Zrot
+        }
+
+        rotationMatrix = rotationDict[channels[2]].dot(
+            rotationDict[channels[1]].dot(
+                rotationDict[channels[0]]
+            )
+        )
+
+        return Quaternion(matrix=rotationMatrix)
