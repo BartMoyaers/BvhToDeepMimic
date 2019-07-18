@@ -209,7 +209,6 @@ class BvhJointHandler:
             rotation = JointInfo.EulerXYZToQuaternion(eulerAngles[0], eulerAngles[1], eulerAngles[2])
             rotation[3] = -rotation[3]
             offset = jointInfo.offsetQuat
-            yRot = JointInfo.EulerXYZToQuaternion(0,180,0)
             
             result = offset * rotation
             return result.elements
