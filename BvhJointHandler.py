@@ -11,6 +11,7 @@ class JointInfo:
     """ Contains information on a certain joint in the DeepMimic human model as 
     well as some functions in order to convert joint data from BVH to DeepMimic.
     """
+
     def __init__(self, deepMimicName: str, bvhName: str, dimensions: int,
                  zeroRotVector: List[float], childOffset: List[float]):
         self.deepMimicName = deepMimicName
@@ -40,9 +41,9 @@ class JointInfo:
             perpvec = perpvec / perpnorm
             angle = math.acos(np.dot(v1, v2))
         else:
-            perpvec = np.array([1,0,0])
+            perpvec = np.array([1, 0, 0])
             angle = 0
-        
+
         # Calculate quaternion from angle axis form.
         result = Quaternion(axis=perpvec, radians=angle)
 
@@ -59,9 +60,11 @@ class JointInfo:
             -quaternion[1]
         )
 
+
 class BvhJointHandler:
     """ Handles conversion of BVH files to DeepMimic format.
     """
+
     def __init__(self, mocap: Bvh, rigPath="./Rigs/humanoidRig.json", posLocked=False):
         self.mocap = mocap
         self.posLocked = posLocked
@@ -73,26 +76,28 @@ class BvhJointHandler:
         # Sets up list of bones used by DeepMimic humanoid
         # Order is important
         self.deepMimicHumanoidJoints = ["seconds", "hip", "hip", "chest", "neck", "right hip", "right knee", "right ankle",
-                                "right shoulder", "right elbow", "left hip", "left knee", "left ankle", "left shoulder", "left elbow"]
+                                        "right shoulder", "right elbow", "left hip", "left knee", "left ankle", "left shoulder", "left elbow"]
 
         self.jointDimensions = [1, 3, 4, 4, 4, 4, 1, 4, 4, 1, 4, 1, 4, 4, 1]
 
+        # Looking directly at the front of the model, X-axis points at you, Y-axis points straight up, Z-axis points left.
+        # Image of correct deepMimic humanoid bind pose: https://user-images.githubusercontent.com/43953552/61379957-cb485c80-a8a8-11e9-8b78-24f4bf581900.PNG
         self.rotVecDict = {
             "seconds": [],
-            "hip": [0,0,0],
-            "hip": [0,0,0],
-            "chest": [0,1,0],
-            "neck": [0,1,0],
-            "right hip": [0,-1,0],
-            "right knee": [0,0,0],
-            "right ankle": [0,0,0],
-            "right shoulder": [0,-1,0],
-            "right elbow": [0,0,0],
-            "left hip": [0,-1,0],
-            "left knee": [0,0,0],
-            "left ankle": [0,0,0],
-            "left shoulder": [0,-1,0],
-            "left elbow": [0,0,0]
+            "hip": [0, 0, 0],
+            "hip": [0, 0, 0],
+            "chest": [0, 1, 0],
+            "neck": [0, 1, 0],
+            "right hip": [0, -1, 0],
+            "right knee": [0, 0, 0],
+            "right ankle": [0, 0, 0],
+            "right shoulder": [0, -1, 0],
+            "right elbow": [0, 0, 0],
+            "left hip": [0, -1, 0],
+            "left knee": [0, 0, 0],
+            "left ankle": [0, 0, 0],
+            "left shoulder": [0, -1, 0],
+            "left elbow": [0, 0, 0]
         }
 
         self.jointChildDict = {
@@ -142,7 +147,7 @@ class BvhJointHandler:
 
         # Append hip root pos
         if self.posLocked:
-            result.extend([2,2,2])
+            result.extend([2, 2, 2])
         else:
             result.extend(
                 self.getJointTranslation(frameNumber, self.jointData[0])
@@ -179,19 +184,22 @@ class BvhJointHandler:
 
         if len(channels) > 3:
             for channel in self.positionChannelNames:
-                result.append(self.mocap.frame_joint_channel(frameNumber, jointInfo.bvhName, channel))
+                result.append(self.mocap.frame_joint_channel(
+                    frameNumber, jointInfo.bvhName, channel))
         return result
 
     def getJointRotation(self, frameNumber: int, jointInfo: JointInfo) -> List[float]:
         # Get the order of channel names as desribed in BVH file for this joint.
         channels = self.mocap.joint_channels(jointInfo.bvhName)
         # Only keep the rotation channels
-        channels = list(filter(lambda x: x in self.rotationChannelNames, channels))
+        channels = list(
+            filter(lambda x: x in self.rotationChannelNames, channels))
 
         # Get the X, Y, Z euler angles
         eulerAngles = []
         for channel in self.rotationChannelNames:
-            eulerAngles.append(self.mocap.frame_joint_channel(frameNumber, jointInfo.bvhName, channel))
+            eulerAngles.append(self.mocap.frame_joint_channel(
+                frameNumber, jointInfo.bvhName, channel))
 
         # Calculate joint rotations
         if jointInfo.dimensions > 1:
@@ -200,7 +208,7 @@ class BvhJointHandler:
             rotation = JointInfo.quatBvhToDM(rotation)
 
             offset = jointInfo.offsetQuat
-            
+
             result = offset * rotation
             return result.elements
         else:
@@ -219,7 +227,7 @@ class BvhJointHandler:
         # See: https://en.wikipedia.org/wiki/Rotation_matrix#In_three_dimensions
         Xrot = np.array(
             [
-                [1,0,0],
+                [1, 0, 0],
                 [0, math.cos(Xangle), -math.sin(Xangle)],
                 [0, math.sin(Xangle), math.cos(Xangle)]
             ]

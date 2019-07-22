@@ -17,6 +17,7 @@ def removeAllFilesInDirectory(directory):
     for i in range(0, len(onlyfiles)):
         os.remove(f"{directory}{onlyfiles[i]}")
 
+
 # Initialization
 # ===========================================================================
 dirname = "./OutputMimic/"
@@ -49,6 +50,7 @@ for j in range(0, len(onlyfiles)):
 
             # Convert file
             mocap = Bvh(f.read())
+
             jointHandler = BvhJointHandler(mocap, posLocked=posLocked)
 
             print("Converting:\t\"" + onlyfiles[j] + "\"")
@@ -56,7 +58,7 @@ for j in range(0, len(onlyfiles)):
 
             # Output in dictionary format for easy json dump
             outputDict = {
-                "Loop": "none", # "none" or "wrap"
+                "Loop": "none",  # "none" or "wrap"
                 "Frames": frames
             }
 

@@ -1,6 +1,9 @@
 #output files
 OutputMimic/
 
+#input files
+InputBvh/
+
 # python
 __pycache__/
 *.pyc
