@@ -80,6 +80,8 @@ class BvhJointHandler:
 
         self.jointDimensions = [1, 3, 4, 4, 4, 4, 1, 4, 4, 1, 4, 1, 4, 4, 1]
 
+        # Looking directly at the front of the model, X-axis points at you, Y-axis points straight up, Z-axis points left.
+        # Image of correct deepMimic humanoid bind pose: https://user-images.githubusercontent.com/43953552/61379957-cb485c80-a8a8-11e9-8b78-24f4bf581900.PNG
         self.rotVecDict = {
             "seconds": [],
             "hip": [0, 0, 0],
