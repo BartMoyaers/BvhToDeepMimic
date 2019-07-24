@@ -1,5 +1,6 @@
 import numpy as np
 import math
+from typing import List
 from pyquaternion import Quaternion
 
 class JointInfo:
