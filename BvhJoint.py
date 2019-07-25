@@ -135,3 +135,24 @@ class BvhJoint:
     def _updatePosition(self):
         vector = self.total_tf_matrix @ np.array([0,0,0,1]).T
         self.position = vector[:-1]
+
+    def search(self, name: str):
+        if self.name == name:
+            return self
+        else:
+            for child in self.children:
+                found = child.search(name)
+                if found is not None:
+                    return found
+        return
+
+    def searchJoint(self, name:str):
+        found = self.search(name)
+        if found is None:
+            raise LookupError("Joint name not found.")
+        else:
+            return found
+
+    def getJointPosition(self, name):
+        joint = self.searchJoint(name)
+        return joint.position
