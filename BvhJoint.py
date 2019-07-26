@@ -38,7 +38,7 @@ class BvhJoint:
         self._updatePosition()
 
         for child in self.children:
-            child.update(frameNumber, self.tf_matrix)
+            child.update(frameNumber, self.total_tf_matrix)
 
     def _createChildJoints(self):
         result = []
@@ -129,7 +129,7 @@ class BvhJoint:
         self.total_tf_matrix = result
 
     def _updatePosition(self):
-        vector = self.total_tf_matrix @ np.array([0,0,0,1]).T
+        vector = np.array([0,0,0,1]) @ self.total_tf_matrix.T
         self.position = vector[:-1]
 
     def _search(self, name: str):
