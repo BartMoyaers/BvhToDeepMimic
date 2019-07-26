@@ -1,14 +1,15 @@
 from JointInfo import JointInfo
 from typing import List
-from bvh import Bvh
+from BvhChildren import BvhExtended
 import numpy as np
 import math
 
 class BvhJoint:
+    # TODO: get channel names from file for easy configuration
     positionChannelNames = ["Xposition", "Yposition", "Zposition"]
     rotationChannelNames = ["Xrotation", "Yrotation", "Zrotation"]
 
-    def __init__(self, mocap: Bvh, name: str, isRoot=False):
+    def __init__(self, mocap: BvhExtended, name: str, isRoot=False):
         self.name = name
         self.mocap = mocap
         self.is_root = isRoot
@@ -28,7 +29,7 @@ class BvhJoint:
         # root joint up to this joint.
         self.total_tf_matrix = np.eye(4)
         # Position of this joint in 3D space.
-        self.position = np.zeros(3)
+        self.position: np.array = np.zeros(3)
 
     def update(self, frameNumber, parent_transform=np.eye(4)):
         self._updateJointTranslation(frameNumber)
@@ -39,13 +40,9 @@ class BvhJoint:
         for child in self.children:
             child.update(frameNumber, self.tf_matrix)
 
-    def getDirectChildrenNames(self):
-        joint = self.mocap.get_joint(self.name)
-        return [child.name for child in joint.filter('JOINT')]
-
     def _createChildJoints(self):
         result = []
-        for childName in self.getDirectChildrenNames():
+        for childName in self.mocap.getDirectChildrenNames(self.name):
             result.append(BvhJoint(self.mocap, childName))
         return result
 
@@ -73,7 +70,6 @@ class BvhJoint:
         return eulerAngles
 
     def _updateRotationMatrix(self, frameNumber: int):
-        # def eulerToQuat(self, angles: List[float], channels: List[str]):
         angles = self._getXYZEulerAngles(frameNumber)
         # Convert angles to radians
         Xangle = math.radians(angles[0])
@@ -156,3 +152,12 @@ class BvhJoint:
     def getJointPosition(self, name):
         joint = self.searchJoint(name)
         return joint.position
+
+    def hasEndSite(self):
+        pass
+
+    def getEndSiteOffset(self):
+        pass
+
+    def getEndSitePosition(self):
+        pass

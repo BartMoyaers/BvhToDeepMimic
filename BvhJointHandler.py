@@ -3,15 +3,16 @@ import numpy as np
 import math
 from pyquaternion import Quaternion
 from typing import List
-from bvh import Bvh
+from BvhChildren import BvhExtended
 from tqdm import tqdm
 from JointInfo import JointInfo
+from BvhJoint import BvhJoint
 
 class BvhJointHandler:
     """ Handles conversion of BVH files to DeepMimic format.
     """
 
-    def __init__(self, mocap: Bvh, rigPath="./Rigs/humanoidRig.json", posLocked=False):
+    def __init__(self, mocap: BvhExtended, rigPath="./Rigs/humanoidRig.json", posLocked=False):
         self.mocap = mocap
         self.posLocked = posLocked
 
@@ -68,6 +69,9 @@ class BvhJointHandler:
         self.rotationChannelNames = ["Xrotation", "Yrotation", "Zrotation"]
         self.generateJointData()
 
+        # Joint tree starting at root
+        self.root = BvhJoint(self.mocap, self.humanoidRig[self.deepMimicHumanoidJoints[1]])
+
     def generateJointData(self):
         assert len(self.deepMimicHumanoidJoints) == len(self.jointDimensions)
 
@@ -81,12 +85,14 @@ class BvhJointHandler:
                 bvhBoneName,
                 self.jointDimensions[i],
                 self.rotVecDict[deepMimicBoneName],
-                self.getJointOffset(self.jointChildDict[bvhBoneName])
             )
             self.jointData.append(jointInfo)
 
     def generateKeyFrame(self, frameNumber: int):
         result = []
+        # Update positions and transformation
+        self.root.update(frameNumber)
+        self.current_hip_rotation = self.getRootQuat()
 
         # Append Time
         result.append(self.mocap.frame_time)
@@ -96,17 +102,19 @@ class BvhJointHandler:
             result.extend([2, 2, 2])
         else:
             result.extend(
-                self.getJointTranslation(frameNumber, self.jointData[0])
+                self.getJointTranslation(self.jointData[0])
             )
 
         # Append hip rotation
         result.extend(
-            self.getJointRotation(frameNumber, self.jointData[0])
+            BvhJointHandler.quatBvhToDM(
+                self.current_hip_rotation.elements
+            )
         )
 
         # Append other rotations
         for joint in self.jointData[1:]:
-            result.extend(self.getJointRotation(frameNumber, joint))
+            result.extend(self.getJointRotation(joint))
 
         return result
 
@@ -123,45 +131,49 @@ class BvhJointHandler:
     def getJointOffset(self, bvhJointName):
         return list(self.mocap.joint_offset(bvhJointName))
 
-    def getJointTranslation(self, frameNumber: int, jointInfo: JointInfo):
-        # TODO: get channel names from file or params
-        channels = self.mocap.joint_channels(jointInfo.bvhName)
-        result = []
+    def getJointTranslation(self, jointInfo: JointInfo):
+        return BvhJointHandler.posBvhToDM(
+            self.root.getJointPosition(jointInfo.bvhName)
+        )
 
-        if len(channels) > 3:
-            for channel in self.positionChannelNames:
-                result.append(self.mocap.frame_joint_channel(
-                    frameNumber, jointInfo.bvhName, channel))
-        return result
-
-    def getJointRotation(self, frameNumber: int, jointInfo: JointInfo) -> List[float]:
-        # Get the order of channel names as desribed in BVH file for this joint.
-        channels = self.mocap.joint_channels(jointInfo.bvhName)
-        # Only keep the rotation channels
-        channels = list(
-            filter(lambda x: x in self.rotationChannelNames, channels))
-
-        # Get the X, Y, Z euler angles
-        eulerAngles = []
-        for channel in self.rotationChannelNames:
-            eulerAngles.append(self.mocap.frame_joint_channel(
-                frameNumber, jointInfo.bvhName, channel))
-
-        # Calculate joint rotations
+    def getJointRotation(self, jointInfo: JointInfo) -> List[float]:
+        joint = self.root.searchJoint(jointInfo.bvhName)
         if jointInfo.dimensions > 1:
             # 4D (quaternion) DeepMimic joint
-            rotation = self.eulerToQuat(eulerAngles, channels)
-            rotation = JointInfo.quatBvhToDM(rotation)
+            # Get child position
+            children = joint.children
+            if len(children) > 0:
+                childPos = self.getRelativeJointTranslation(children[0].name)
+            else:
+                # get end site position
+                # TODO: make relative to root pos
+                childPos = joint.getEndSitePosition()
 
-            offset = jointInfo.offsetQuat
+            # rotate zeroRotVec with rootquat
+            zeroRotVec = np.array(jointInfo.zeroRotVector)
+            zeroVec = self.current_hip_rotation.rotate(zeroRotVec)
 
-            result = offset * rotation
-            return result.elements
+            # Calculate quaternion
+            result = BvhJointHandler.calcQuatFromVecs(zeroVec, childPos)
+            return BvhJointHandler.quatBvhToDM(result).elements
         else:
             # 1D DeepMimic joint
             assert jointInfo.dimensions == 1
-            # TODO: calculate this angle correctly (keep all DOF's into account)
-            return [-math.radians(eulerAngles[0])]
+            # Get child position
+            children = joint.children
+            if len(children) > 0:
+                childPos = self.getRelativeJointTranslation(children[0].name)
+            else:
+                # get end site position
+                # TODO: make relative to root pos
+                childPos = joint.getEndSitePosition()
+            # rotate zeroRotVec with rootquat
+            zeroRotVec = np.array(jointInfo.zeroRotVector)
+            zeroVec = self.current_hip_rotation.rotate(zeroRotVec)
+
+            # Calculate quaternion
+            result = BvhJointHandler.calcQuatFromVecs(zeroVec, childPos)
+            return [result.angle]
 
     def eulerToQuat(self, angles: List[float], channels: List[str]):
         # Convert angles to radians
@@ -209,3 +221,84 @@ class BvhJointHandler:
 
         # Return the corresponding quaternion
         return Quaternion(matrix=rotationMatrix)
+
+    def getRelativeJointTranslation(self, bvhJointName):
+        jointPos = self.root.getJointPosition(bvhJointName)
+        return jointPos - self.root.position
+
+
+    def getRootQuat(self):
+        # get left hip position
+        root_left = BvhJointHandler.normalize(
+            self.getRelativeJointTranslation(
+                self.bvhBoneName("root rot left")
+            )
+        )
+
+        # get spine "up" position (y axis in local root frame)
+        y = BvhJointHandler.normalize(
+            self.getRelativeJointTranslation(
+                self.bvhBoneName("root rot up")
+            )
+        )
+
+        # Create orthonormal frame
+        z = BvhJointHandler.normalize(np.cross(root_left, y))
+        x = BvhJointHandler.normalize(np.cross(y, z))
+
+        # Create rotation matrix from frame
+        rot_mat = np.array([x, y, z]).T
+
+        # Create quaternion
+        return Quaternion(matrix=rot_mat)
+
+    @staticmethod
+    def calcQuatFromVecs(v1, v2) -> Quaternion:
+        v1 = BvhJointHandler.normalize(v1)
+        v2 = BvhJointHandler.normalize(v2)
+
+        # Calculate perpendicular vector
+        perpvec = np.cross(v1, v2)
+        perpnorm = np.linalg.norm(perpvec)
+        if perpnorm > 0:
+            perpvec = perpvec / perpnorm
+            # Check for float slightly larger than 1
+            temp = np.dot(v1, v2)
+            if temp > 1:
+                temp = 1.0
+            angle = math.acos(temp)
+        else:
+            perpvec = np.array([1, 0, 0])
+            angle = 0
+
+        # Calculate quaternion from angle axis form.
+        result = Quaternion(axis=perpvec, radians=angle)
+
+        return result
+
+    @staticmethod
+    def normalize(vector):
+        # Normalize a vector (create unit vector)
+        norm = np.linalg.norm(vector)
+        if norm != 1 and norm > 0:
+            vector = vector / norm
+        return vector
+
+    @staticmethod
+    def quatBvhToDM(quaternion: Quaternion) -> Quaternion:
+        # transform x -> z and z -> -x
+        return Quaternion(
+            quaternion[0],
+            quaternion[3],
+            quaternion[2],
+            -quaternion[1]
+        )
+
+    @staticmethod
+    def posBvhToDM(translation: List[float]) -> List[float]:
+        # transform x -> z and z -> -x
+        return [
+            translation[2],
+            translation[1],
+            -translation[0]
+        ]

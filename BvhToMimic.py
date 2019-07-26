@@ -1,7 +1,7 @@
 # Imports
 # ===========================================================================
 
-from bvh import Bvh
+from BvhChildren import BvhExtended
 import json
 import os
 from os import listdir
@@ -49,7 +49,7 @@ for j in range(0, len(onlyfiles)):
         with open("./inputBvh/" + onlyfiles[j]) as f:
 
             # Convert file
-            mocap = Bvh(f.read())
+            mocap = BvhExtended(f.read())
 
             jointHandler = BvhJointHandler(mocap, posLocked=posLocked)
 

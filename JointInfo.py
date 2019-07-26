@@ -8,15 +8,13 @@ class JointInfo:
     well as some functions in order to convert joint data from BVH to DeepMimic.
     """
 
-    def __init__(self, deepMimicName: str, bvhName: str, dimensions: int,
-                 zeroRotVector: List[float], childOffset: List[float]):
+    def __init__(self, deepMimicName: str, bvhName: str, 
+                 dimensions: int, zeroRotVector: List[float]):
         self.deepMimicName = deepMimicName
         self.bvhName = bvhName
+        # self.bvhChildName = bvhChildName
         self.dimensions = dimensions
         self.zeroRotVector = zeroRotVector
-        self.childOffset = childOffset
-
-        self.offsetQuat = self.calculateOffsetQuat()
 
     def calculateOffsetQuat(self) -> Quaternion:
         v1 = np.array(self.zeroRotVector)
@@ -62,5 +60,5 @@ class JointInfo:
         return [
             translation[2],
             translation[1],
-            translation[0]
+            -translation[0]
         ]
