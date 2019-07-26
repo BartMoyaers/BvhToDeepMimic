@@ -11,5 +11,7 @@
   "left knee": "LeftLeg",
   "left ankle": "LeftFoot",
   "left shoulder": "LeftArm",
-  "left elbow": "LeftForeArm"
+  "left elbow": "LeftForeArm",
+  "root rot up": "Spine1",
+  "root rot left": "LeftUpLeg"
 }
