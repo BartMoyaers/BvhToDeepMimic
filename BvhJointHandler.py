@@ -223,8 +223,10 @@ class BvhJointHandler:
         return Quaternion(matrix=rotationMatrix)
 
     def getRelativeJointTranslation(self, bvhJointName):
-        jointPos = self.root.getJointPosition(bvhJointName)
-        return jointPos - self.root.position
+        joint = self.root.searchJoint(bvhJointName)
+        jointPos = joint.position
+        parentPos = joint.parent.position
+        return jointPos - parentPos
 
 
     def getRootQuat(self):

@@ -9,8 +9,9 @@ class BvhJoint:
     positionChannelNames = ["Xposition", "Yposition", "Zposition"]
     rotationChannelNames = ["Xrotation", "Yrotation", "Zrotation"]
 
-    def __init__(self, mocap: BvhExtended, name: str, isRoot=False):
+    def __init__(self, mocap: BvhExtended, name: str, parent=None, isRoot=False):
         self.name = name
+        self.parent = parent
         self.mocap = mocap
         self.is_root = isRoot
         self.offset = np.array(mocap.joint_offset(self.name))
@@ -43,7 +44,7 @@ class BvhJoint:
     def _createChildJoints(self):
         result = []
         for childName in self.mocap.getDirectChildrenNames(self.name):
-            result.append(BvhJoint(self.mocap, childName))
+            result.append(BvhJoint(self.mocap, childName, parent=self))
         return result
 
     def _updateJointTranslation(self, frameNumber: int):
