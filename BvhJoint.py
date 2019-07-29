@@ -117,7 +117,7 @@ class BvhJoint:
 
         # Compute the final rotation matrix in the order as the BVH file describes.
         channels = self.rotation_channels
-        rotationMatrix = rotationDict[channels[2]] @ (rotationDict[channels[1]] @ rotationDict[channels[0]])
+        rotationMatrix = rotationDict[channels[0]] @ (rotationDict[channels[1]] @ rotationDict[channels[2]])
 
         self.rotation_matrix = rotationMatrix
     
