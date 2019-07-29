@@ -155,10 +155,16 @@ class BvhJoint:
         return joint.position
 
     def hasEndSite(self):
-        pass
+        return self.mocap.joint_has_end_site(self.name)
 
     def getEndSiteOffset(self):
-        pass
+        return self.mocap.joint_get_end_site_offset(self.name)
 
     def getEndSitePosition(self):
-        pass
+        vector = self.getEndSiteOffset() + [1]
+        result = (self.total_tf_matrix @ np.array([vector]).T).T
+        return result[0][:-1]
+
+    def getRelativeEndSitePosition(self):
+        endSitePosition = self.getEndSitePosition()
+        return endSitePosition - self.position
