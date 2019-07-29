@@ -137,14 +137,14 @@ class BvhJointHandler:
         )
 
     def getJointRotation(self, jointInfo: JointInfo) -> List[float]:
-        
+        joint = self.root.searchJoint(jointInfo.bvhName)
         if jointInfo.dimensions > 1:
-            return self.calcRotation(jointInfo)
+            return self.calcRotation(joint, jointInfo)
         else:
             # 1D DeepMimic joint
             assert jointInfo.dimensions == 1
             # Get child position
-            childPos = self.getChildPosition(jointInfo)
+            childPos = joint.getRelativeChildPosition()
 
             # rotate zeroRotVec with rootquat
             zeroRotVec = np.array(jointInfo.zeroRotVector)
@@ -154,21 +154,31 @@ class BvhJointHandler:
             result = BvhJointHandler.calcQuatFromVecs(zeroVec, childPos)
             return [result.angle]
 
-    def calcRotation(self, jointInfo: JointInfo):
+    def calcRotation(self, joint: BvhJoint, jointInfo: JointInfo):
         # Get vector from joint to child
-        childPos = self.normalize(self.getChildPosition(jointInfo))
+        childPos = self.normalize(joint.getRelativeChildPosition())
 
-        child = self.root.searchJoint(jointInfo.bvhName).children[0]
-        if len(child.children) > 0 and jointInfo.deepMimicName not in ["chest", "neck"]:
+        child = joint.children[0]
+        if jointInfo.deepMimicName not in ["chest", "neck", "left ankle", "right ankle"]:
             # get child's child position
-            childsChildPos = self.normalize(
-                self.getRelativeJointTranslation(child.children[0].name)
-            )
+            childsChildPos = child.getRelativeChildPosition()
             y = -1 * childPos
             # TODO: check if vectors coincide
             x = self.normalize(np.cross(y, childsChildPos))
             z = self.normalize(np.cross(x, y))
 
+            # Create rotation matrix from frame
+            rot_mat = np.array([x, y, z]).T
+            return BvhJointHandler.quatBvhToDM(
+                Quaternion(matrix=rot_mat)
+            ).elements
+        elif jointInfo.deepMimicName in ["left ankle", "right ankle"]:
+            # get child's child position
+            childsChildPos = child.getRelativeChildPosition()
+            # Feet are pointed in Z direction
+            z = -childPos
+            x = self.normalize(np.cross(childsChildPos, z))
+            y = self.normalize(np.cross(z, x))
             # Create rotation matrix from frame
             rot_mat = np.array([x, y, z]).T
             return BvhJointHandler.quatBvhToDM(
