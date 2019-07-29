@@ -136,37 +136,27 @@ class BvhJointHandler:
             self.root.getJointPosition(jointInfo.bvhName)
         )
 
-    def getJointRotation(self, jointInfo: JointInfo) -> List[float]:
+    def getChildPosition(self, jointInfo: JointInfo) -> List[float]:
         joint = self.root.searchJoint(jointInfo.bvhName)
+        children = joint.children
+        if len(children) > 0:
+            childPos = self.getRelativeJointTranslation(children[0].name)
+        else:
+            # get end site position
+            # TODO: make relative to root pos
+            childPos = joint.getEndSitePosition()
+        return childPos
+
+    def getJointRotation(self, jointInfo: JointInfo) -> List[float]:
+        
         if jointInfo.dimensions > 1:
-            # 4D (quaternion) DeepMimic joint
-            # Get child position
-            children = joint.children
-            if len(children) > 0:
-                childPos = self.getRelativeJointTranslation(children[0].name)
-            else:
-                # get end site position
-                # TODO: make relative to root pos
-                childPos = joint.getEndSitePosition()
-
-            # rotate zeroRotVec with rootquat
-            zeroRotVec = np.array(jointInfo.zeroRotVector)
-            zeroVec = self.current_hip_rotation.rotate(zeroRotVec)
-
-            # Calculate quaternion
-            result = BvhJointHandler.calcQuatFromVecs(zeroVec, childPos)
-            return BvhJointHandler.quatBvhToDM(result).elements
+            return self.calcRotation(jointInfo)
         else:
             # 1D DeepMimic joint
             assert jointInfo.dimensions == 1
             # Get child position
-            children = joint.children
-            if len(children) > 0:
-                childPos = self.getRelativeJointTranslation(children[0].name)
-            else:
-                # get end site position
-                # TODO: make relative to root pos
-                childPos = joint.getEndSitePosition()
+            childPos = self.getChildPosition(jointInfo)
+
             # rotate zeroRotVec with rootquat
             zeroRotVec = np.array(jointInfo.zeroRotVector)
             zeroVec = self.current_hip_rotation.rotate(zeroRotVec)
@@ -174,6 +164,36 @@ class BvhJointHandler:
             # Calculate quaternion
             result = BvhJointHandler.calcQuatFromVecs(zeroVec, childPos)
             return [result.angle]
+
+    def calcRotation(self, jointInfo: JointInfo):
+        # Get vector from joint to child
+        childPos = self.normalize(self.getChildPosition(jointInfo))
+
+        child = self.root.searchJoint(jointInfo.bvhName).children[0]
+        if len(child.children) > 0 and jointInfo.deepMimicName not in ["chest", "neck"]:
+            # get child's child position
+            childsChildPos = self.normalize(
+                self.getRelativeJointTranslation(child.children[0].name)
+            )
+            y = -1 * childPos
+            # TODO: check if vectors coincide
+            x = self.normalize(np.cross(y, childsChildPos))
+            z = self.normalize(np.cross(x, y))
+
+            # Create rotation matrix from frame
+            rot_mat = np.array([x, y, z]).T
+            return BvhJointHandler.quatBvhToDM(
+                Quaternion(matrix=rot_mat)
+            ).elements
+        else:
+            # rotate zeroRotVec with rootquat
+            zeroRotVec = np.array(jointInfo.zeroRotVector)
+            zeroVec = self.current_hip_rotation.rotate(zeroRotVec)
+
+            # Calculate quaternion
+            result = BvhJointHandler.calcQuatFromVecs(zeroVec, childPos)
+            return BvhJointHandler.quatBvhToDM(result).elements
+
 
     def eulerToQuat(self, angles: List[float], channels: List[str]):
         # Convert angles to radians
