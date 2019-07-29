@@ -36,15 +36,15 @@ class BvhJointHandler:
             "chest": [0, 1, 0],
             "neck": [0, 1, 0],
             "right hip": [0, -1, 0],
-            "right knee": [0, 0, 0],
-            "right ankle": [0, 0, 0],
+            "right knee": [0, -1, 0],
+            "right ankle": [1, 0, 0],
             "right shoulder": [0, -1, 0],
-            "right elbow": [0, 0, 0],
+            "right elbow": [0, -1, 0],
             "left hip": [0, -1, 0],
-            "left knee": [0, 0, 0],
-            "left ankle": [0, 0, 0],
+            "left knee": [0, -1, 0],
+            "left ankle": [1, 0, 0],
             "left shoulder": [0, -1, 0],
-            "left elbow": [0, 0, 0]
+            "left elbow": [0, -1, 0]
         }
 
         self.jointChildDict = {
