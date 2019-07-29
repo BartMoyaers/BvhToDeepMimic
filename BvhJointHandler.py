@@ -136,17 +136,6 @@ class BvhJointHandler:
             self.root.getJointPosition(jointInfo.bvhName)
         )
 
-    def getChildPosition(self, jointInfo: JointInfo) -> List[float]:
-        joint = self.root.searchJoint(jointInfo.bvhName)
-        children = joint.children
-        if len(children) > 0:
-            childPos = self.getRelativeJointTranslation(children[0].name)
-        else:
-            # get end site position
-            # TODO: make relative to root pos
-            childPos = joint.getEndSitePosition()
-        return childPos
-
     def getJointRotation(self, jointInfo: JointInfo) -> List[float]:
         
         if jointInfo.dimensions > 1:
@@ -244,10 +233,7 @@ class BvhJointHandler:
 
     def getRelativeJointTranslation(self, bvhJointName):
         joint = self.root.searchJoint(bvhJointName)
-        jointPos = joint.position
-        parentPos = joint.parent.position
-        return jointPos - parentPos
-
+        return joint.getRelativeJointTranslation()
 
     def getRootQuat(self):
         # get left hip position

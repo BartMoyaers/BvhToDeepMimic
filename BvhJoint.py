@@ -154,6 +154,19 @@ class BvhJoint:
         joint = self.searchJoint(name)
         return joint.position
 
+    def getRelativeChildPosition(self):
+        if len(self.children) > 0:
+            childPos = self.children[0].getRelativeJointTranslation()
+        else:
+            # get end site position
+            childPos = self.getRelativeEndSitePosition()
+        return childPos
+
+    def getRelativeJointTranslation(self):
+        jointPos = self.position
+        parentPos = self.parent.position
+        return jointPos - parentPos
+
     def hasEndSite(self):
         return self.mocap.joint_has_end_site(self.name)
 
