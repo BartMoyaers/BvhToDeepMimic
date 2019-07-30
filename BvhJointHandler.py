@@ -142,6 +142,7 @@ class BvhJointHandler:
         if jointInfo.deepMimicName not in ["chest", "neck", "left ankle", "right ankle"]:
             # get child's child position
             childsChildPos = child.getRelativeChildPosition()
+
             y = -1 * childPos
             # TODO: check if vectors coincide
             x = self.normalize(np.cross(y, childsChildPos))
@@ -149,20 +150,27 @@ class BvhJointHandler:
 
             # Create rotation matrix from frame
             rot_mat = np.array([x, y, z]).T
+            # Take base rotation into account
+            zero_rot_mat = self.root.getTotalRotationMatrix()
+            result = zero_rot_mat.T @ rot_mat
             return BvhJointHandler.quatBvhToDM(
-                Quaternion(matrix=rot_mat)
+                Quaternion(matrix=result)
             ).elements
         elif jointInfo.deepMimicName in ["left ankle", "right ankle"]:
             # get child's child position
             childsChildPos = child.getRelativeChildPosition()
+
             # Feet are pointed in Z direction TODO: find out why minus sign is needed
             z = -childPos
             x = self.normalize(np.cross(childsChildPos, z))
             y = self.normalize(np.cross(z, x))
             # Create rotation matrix from frame
             rot_mat = np.array([x, y, z]).T
+            # Take base rotation into account
+            zero_rot_mat = self.root.getTotalRotationMatrix()
+            result = zero_rot_mat.T @ rot_mat
             return BvhJointHandler.quatBvhToDM(
-                Quaternion(matrix=rot_mat)
+                Quaternion(matrix=result)
             ).elements
         else:
             # rotate zeroRotVec with rootquat
