@@ -47,26 +47,6 @@ class BvhJointHandler:
             "left elbow": [0, -1, 0]
         }
 
-        self.jointChildDict = {
-            # TODO: expand BVH parser to allow to get child joints
-            # Child joints are necessary to be able to compute the offset quaternions correctly.
-            "Hips": "Hips",
-            "Spine": "Spine1",
-            "Neck": "Head",
-            "RightUpLeg": "RightLeg",
-            "RightLeg": "RightFoot",
-            "RightFoot": "RightToeBase",
-            "RightArm": "RightForeArm",
-            "RightForeArm": "RightHand",
-            "LeftUpLeg": "LeftLeg",
-            "LeftLeg": "LeftFoot",
-            "LeftFoot": "LeftToeBase",
-            "LeftArm": "LeftForeArm",
-            "LeftForeArm": "LeftHand"
-        }
-
-        self.positionChannelNames = ["Xposition", "Yposition", "Zposition"]
-        self.rotationChannelNames = ["Xrotation", "Yrotation", "Zrotation"]
         self.generateJointData()
 
         # Joint tree starting at root
@@ -192,54 +172,6 @@ class BvhJointHandler:
             # Calculate quaternion
             result = BvhJointHandler.calcQuatFromVecs(zeroVec, childPos)
             return BvhJointHandler.quatBvhToDM(result).elements
-
-
-    def eulerToQuat(self, angles: List[float], channels: List[str]):
-        # Convert angles to radians
-        Xangle = math.radians(angles[0])
-        Yangle = math.radians(angles[1])
-        Zangle = math.radians(angles[2])
-
-        # Create the rotation matrix for every euler angle
-        # See: https://en.wikipedia.org/wiki/Rotation_matrix#In_three_dimensions
-        Xrot = np.array(
-            [
-                [1, 0, 0],
-                [0, math.cos(Xangle), -math.sin(Xangle)],
-                [0, math.sin(Xangle), math.cos(Xangle)]
-            ]
-        )
-        Yrot = np.array(
-            [
-                [math.cos(Yangle), 0, math.sin(Yangle)],
-                [0, 1, 0],
-                [-math.sin(Yangle), 0, math.cos(Yangle)]
-            ]
-        )
-        Zrot = np.array(
-            [
-                [math.cos(Zangle), -math.sin(Zangle), 0],
-                [math.sin(Zangle), math.cos(Zangle), 0],
-                [0, 0, 1]
-            ]
-        )
-
-        # Connect the rotation channel names to corresponding matrices
-        rotationDict = {
-            self.rotationChannelNames[0]: Xrot,
-            self.rotationChannelNames[1]: Yrot,
-            self.rotationChannelNames[2]: Zrot
-        }
-
-        # Compute the final rotation matrix in the order as the BVH file describes.
-        rotationMatrix = rotationDict[channels[2]].dot(
-            rotationDict[channels[1]].dot(
-                rotationDict[channels[0]]
-            )
-        )
-
-        # Return the corresponding quaternion
-        return Quaternion(matrix=rotationMatrix)
 
     def getRelativeJointTranslation(self, bvhJointName):
         joint = self.root.searchJoint(bvhJointName)
