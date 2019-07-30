@@ -27,7 +27,7 @@ class BvhJointHandler:
 
         self.jointDimensions = [1, 3, 4, 4, 4, 4, 1, 4, 4, 1, 4, 1, 4, 4, 1]
 
-        # Looking directly at the front of the model, X-axis points at you, Y-axis points straight up, Z-axis points left.
+        # Looking directly at the front of the DeepMimic model, X-axis points at you, Y-axis points straight up, Z-axis points left.
         # Image of correct deepMimic humanoid bind pose: https://user-images.githubusercontent.com/43953552/61379957-cb485c80-a8a8-11e9-8b78-24f4bf581900.PNG
         self.rotVecDict = {
             "seconds": [],
@@ -175,7 +175,7 @@ class BvhJointHandler:
         elif jointInfo.deepMimicName in ["left ankle", "right ankle"]:
             # get child's child position
             childsChildPos = child.getRelativeChildPosition()
-            # Feet are pointed in Z direction
+            # Feet are pointed in Z direction TODO: find out why minus sign is needed
             z = -childPos
             x = self.normalize(np.cross(childsChildPos, z))
             y = self.normalize(np.cross(z, x))
