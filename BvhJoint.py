@@ -181,3 +181,6 @@ class BvhJoint:
     def getRelativeEndSitePosition(self):
         endSitePosition = self.getEndSitePosition()
         return endSitePosition - self.position
+
+    def getTotalRotationMatrix(self):
+        return self.total_tf_matrix[:-1,:-1]
