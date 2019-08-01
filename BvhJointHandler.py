@@ -15,6 +15,7 @@ class BvhJointHandler:
     def __init__(self, mocap: BvhExtended, rigPath="./Rigs/humanoidRig.json", posLocked=False):
         self.mocap = mocap
         self.posLocked = posLocked
+        self.calcScale()
 
         # get json of humanoidRig
         with open(rigPath) as json_data:
@@ -113,7 +114,7 @@ class BvhJointHandler:
 
     def getJointTranslation(self, jointInfo: JointInfo):
         return BvhJointHandler.posBvhToDM(
-            self.root.getJointPosition(jointInfo.bvhName)
+            self.scaleFactor * self.root.getJointPosition(jointInfo.bvhName)
         )
 
     def getJointRotation(self, jointInfo: JointInfo) -> List[float]:
@@ -209,6 +210,15 @@ class BvhJointHandler:
 
         # Create quaternion
         return Quaternion(matrix=rot_mat)
+
+    def calcScale(self):
+        # Calculate the scaling factor to transform bvh translations to DM translations
+        # From: http://mocap.cs.cmu.edu/faqs.php
+        # For 02_01.bvh:
+        # self.scaleFactor = (1.0 / 0.45) * 2.54 / 100.0 # = 0.056444
+        # For bvh files from http://mocap.cs.sfu.ca/
+        self.scaleFactor = 2.54 / 100.0 + 0.15 / 100
+
 
     @staticmethod
     def calcQuatFromVecs(v1, v2) -> Quaternion:
