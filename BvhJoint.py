@@ -1,6 +1,6 @@
 from JointInfo import JointInfo
 from typing import List
-from BvhChildren import BvhExtended
+from BvhExtended import BvhExtended
 import numpy as np
 import math
 

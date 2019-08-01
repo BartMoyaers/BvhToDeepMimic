@@ -3,7 +3,7 @@ import numpy as np
 import math
 from pyquaternion import Quaternion
 from typing import List
-from BvhChildren import BvhExtended
+from BvhExtended import BvhExtended
 from tqdm import tqdm
 from JointInfo import JointInfo
 from BvhJoint import BvhJoint

@@ -1,7 +1,7 @@
 # Imports
 # ===========================================================================
 
-from BvhChildren import BvhExtended
+from BvhExtended import BvhExtended
 import json
 import os
 from os import listdir
@@ -27,7 +27,7 @@ if not os.path.exists(dirname):
 removeAllFilesInDirectory(dirname)
 
 # Locks root position and rotation for dev testing
-posLocked = True
+posLocked = False
 
 # sets onlyfiles to a list of files founds in the "mypath" directory
 mypath = "./inputBvh/"
