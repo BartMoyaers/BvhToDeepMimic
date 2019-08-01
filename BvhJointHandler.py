@@ -124,16 +124,12 @@ class BvhJointHandler:
         else:
             # 1D DeepMimic joint
             assert jointInfo.dimensions == 1
-            # Get child position
-            childPos = joint.getRelativeChildPosition()
+            # Get positions
+            childPos = self.normalize(joint.getRelativeChildPosition())
+            jointPos = self.normalize(joint.getRelativeJointTranslation())
 
-            # rotate zeroRotVec with rootquat
-            zeroRotVec = np.array(jointInfo.zeroRotVector)
-            zeroVec = self.current_hip_rotation.rotate(zeroRotVec)
-
-            # Calculate quaternion
-            result = BvhJointHandler.calcQuatFromVecs(zeroVec, childPos)
-            return [result.angle]
+            angle = math.acos(np.dot(jointPos, childPos))
+            return [angle]
 
     def calcRotation(self, joint: BvhJoint, jointInfo: JointInfo):
         # Get vector from joint to child
