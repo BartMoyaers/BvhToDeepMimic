@@ -2,7 +2,7 @@
 
 ## Goal
 
-The [DeepMimic project](https://github.com/xbpeng/DeepMimic) currently offers no way to import custom reference motions. This is shown in [DeepMimic issue #23](https://github.com/xbpeng/DeepMimic/issues/23). This project aims to transfer animation data from .BVH files into DeepMimic Motion files. Motion files can then be used to Train DeepMimic skills. Many thanks to user [SleepingFox88](https://github.com/SleepingFox88) for starting off the project. Original repository can be found [here](https://github.com/SleepingFox88/BvhToMimic).
+The [DeepMimic project](https://github.com/xbpeng/DeepMimic) currently offers no way to import custom reference motions. This is shown in [DeepMimic issue #23](https://github.com/xbpeng/DeepMimic/issues/23). This project aims to transfer animation data from .BVH files into DeepMimic Motion files. Motion files can then be used to Train DeepMimic skills. Many thanks to user [SleepingFox88](https://github.com/SleepingFox88) for starting off the project. Original repository can be found [here](https://github.com/SleepingFox88/BvhToMimic). This repository currently works well with [this database](http://mocap.cs.sfu.ca/).
 
 ## Progress
 
@@ -39,3 +39,7 @@ Will convert all .bvh files located in /InputBvh/ into Mimic Motion files, locat
 ## Related Projects
 
 [List of related projects](https://github.com/SleepingFox88/DeepMimic-Animation-Conversion)
+
+### Notes
+
+Most parts of this code have been devloped within the [ACRO research group](https://iiw.kuleuven.be/onderzoek/acro).
