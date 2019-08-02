@@ -1,0 +1,31 @@
+{
+    "Settings": {
+        "deepMimicHumanoidJoints": [
+            "seconds", "hip", "hip", "chest", "neck", "right hip", "right knee", "right ankle",
+            "right shoulder", "right elbow", "left hip", "left knee", "left ankle", "left shoulder", 
+            "left elbow"
+        ],
+        "jointAssignments": {
+            "hip": "Hips",
+            "chest": "Spine",
+            "neck": "Neck",
+            "right hip": "RightUpLeg",
+            "right knee": "RightLeg",
+            "right ankle": "RightFoot",
+            "right shoulder": "RightArm",
+            "right elbow": "RightForeArm",
+            "left hip": "LeftUpLeg",
+            "left knee": "LeftLeg",
+            "left ankle": "LeftFoot",
+            "left shoulder": "LeftArm",
+            "left elbow": "LeftForeArm",
+        },
+        "rootRotJoints": {
+            "root rot up": "Spine1",
+            "root rot left": "LeftUpLeg",
+        },
+        "positionChannelNames": ["Xposition", "Yposition", "Zposition"],
+        "rotationChannelNames": ["Xrotation", "Yrotation", "Zrotation"],
+        "scale": 0.0254,
+    }
+}
