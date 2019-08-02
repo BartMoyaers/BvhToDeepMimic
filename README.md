@@ -2,21 +2,15 @@
 
 ## Goal
 
-The [DeepMimic project](https://github.com/xbpeng/DeepMimic) currently offers no way to import custom reference motions. This is shown in [DeepMimic issue #23](https://github.com/xbpeng/DeepMimic/issues/23). This project aims to transfer animation data from .BVH files into DeepMimic Motion files. Motion files can then be used to Train DeepMimic skills.
+The [DeepMimic project](https://github.com/xbpeng/DeepMimic) currently offers no way to import custom reference motions. This is shown in [DeepMimic issue #23](https://github.com/xbpeng/DeepMimic/issues/23). This project aims to transfer animation data from .BVH files into DeepMimic Motion files. Motion files can then be used to Train DeepMimic skills. Many thanks to user [SleepingFox88](https://github.com/SleepingFox88) for starting off the project. Original repository can be found [here](https://github.com/SleepingFox88/BvhToMimic).
 
-## Related Projects
+## Progress
 
-[List of related projects](https://github.com/SleepingFox88/DeepMimic-Animation-Conversion)
+![walkTest1](./Assets/walking_example.gif)
 
-## Progress so far
+(GIF has been generated using [this](http://mocap.cs.sfu.ca/nusmocap/0005_Walking001.bvh) mocap file from [this database](http://mocap.cs.sfu.ca/).)
 
-![walkTest1](./Assets/walkTest1.gif)
-
-### [experimental] manual offset test:
-
-[link to branch](https://github.com/SleepingFox88/BvhToMimic/tree/manual-offset-experimentation)
-
-![manualOffsetTest](./Assets/manualOffsetTest.gif)
+Watch more videos of recorded conversions [here](https://www.youtube.com/playlist?list=PLd8lridYo1jPV26RsWZIGSJJew9nu4XSF).
 
 ## Dependencies
 
@@ -30,11 +24,9 @@ tqdm `pip install tqdm`
 
 pyquaternion `pip install pyquaternion`
 
-## Creating a humanoid rig
+## Creating a settings file
 
-Currently joints in .bvh files have to be manually assigned by name to the corresponding joints in the Mimic Motion humanoid rig. This is done by assigning .bvh model's bone names to the corresponding joint properties in [./Rigs/humanoidRig.json](./Rigs/humanoidRig.json)
-
-I am currently unaware of how to create or use any algorithms that know how to automatically generate a humanoid rig (similar to how unity can), but am open to using them upon finding one.
+Currently joints in .bvh files have to be manually assigned by name to the corresponding joints in the DeepMimic humanoid model. This is done by assigning the .bvh model's bone names to the corresponding joint properties in [./Rigs/humanoidRig.json](./Rigs/humanoidRig.json). On top of the joint assignments, this file should also include settings to change the scale by which the .bvh file should be transformed, and the joints used to identify the **root** rotation and translation of the model.
 
 ## Running the project
 
@@ -43,3 +35,7 @@ python BvhToMimic.py
 ```
 
 Will convert all .bvh files located in /InputBvh/ into Mimic Motion files, located in /OutputMimic/
+
+## Related Projects
+
+[List of related projects](https://github.com/SleepingFox88/DeepMimic-Animation-Conversion)
