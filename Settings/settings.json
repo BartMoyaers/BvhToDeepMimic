@@ -1,31 +1,46 @@
 {
-    "Settings": {
-        "deepMimicHumanoidJoints": [
-            "seconds", "hip", "hip", "chest", "neck", "right hip", "right knee", "right ankle",
-            "right shoulder", "right elbow", "left hip", "left knee", "left ankle", "left shoulder", 
-            "left elbow"
-        ],
-        "jointAssignments": {
-            "hip": "Hips",
-            "chest": "Spine",
-            "neck": "Neck",
-            "right hip": "RightUpLeg",
-            "right knee": "RightLeg",
-            "right ankle": "RightFoot",
-            "right shoulder": "RightArm",
-            "right elbow": "RightForeArm",
-            "left hip": "LeftUpLeg",
-            "left knee": "LeftLeg",
-            "left ankle": "LeftFoot",
-            "left shoulder": "LeftArm",
-            "left elbow": "LeftForeArm",
-        },
-        "rootRotJoints": {
-            "root rot up": "Spine1",
-            "root rot left": "LeftUpLeg",
-        },
-        "positionChannelNames": ["Xposition", "Yposition", "Zposition"],
-        "rotationChannelNames": ["Xrotation", "Yrotation", "Zrotation"],
-        "scale": 0.0254,
+    "joints": [
+        "seconds", "hip", "hip", "chest", "neck", "right hip", "right knee", "right ankle",
+        "right shoulder", "right elbow", "left hip", "left knee", "left ankle", "left shoulder", 
+        "left elbow"
+    ],
+    "jointDimensions": [1, 3, 4, 4, 4, 4, 1, 4, 4, 1, 4, 1, 4, 4, 1],
+    "jointAssignments": {
+        "hip": "Hips",
+        "chest": "Spine",
+        "neck": "Neck",
+        "right hip": "RightUpLeg",
+        "right knee": "RightLeg",
+        "right ankle": "RightFoot",
+        "right shoulder": "RightArm",
+        "right elbow": "RightForeArm",
+        "left hip": "LeftUpLeg",
+        "left knee": "LeftLeg",
+        "left ankle": "LeftFoot",
+        "left shoulder": "LeftArm",
+        "left elbow": "LeftForeArm"
+    },
+    "rootRotJoints": {
+        "root rot up": "Spine1",
+        "root rot left": "LeftUpLeg"
+    },
+    "positionChannelNames": ["Xposition", "Yposition", "Zposition"],
+    "rotationChannelNames": ["Xrotation", "Yrotation", "Zrotation"],
+    "scale": 0.0254,
+    "zeroRotationVectors": {
+        "seconds": [],
+        "hip": [0, 0, 0],
+        "chest": [0, 1, 0],
+        "neck": [0, 1, 0],
+        "right hip": [0, -1, 0],
+        "right knee": [0, -1, 0],
+        "right ankle": [1, 0, 0],
+        "right shoulder": [0, -1, 0],
+        "right elbow": [0, -1, 0],
+        "left hip": [0, -1, 0],
+        "left knee": [0, -1, 0],
+        "left ankle": [1, 0, 0],
+        "left shoulder": [0, -1, 0],
+        "left elbow": [0, -1, 0]
     }
 }

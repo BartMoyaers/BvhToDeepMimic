@@ -12,51 +12,36 @@ class BvhJointHandler:
     """ Handles conversion of BVH files to DeepMimic format.
     """
 
-    def __init__(self, mocap: BvhExtended, rigPath="./Rigs/humanoidRig.json", posLocked=False):
+    def __init__(self, mocap: BvhExtended, settingsPath="./Settings/settings.json", posLocked=False):
         self.mocap = mocap
         self.posLocked = posLocked
-        self.calcScale()
 
-        # get json of humanoidRig
-        with open(rigPath) as json_data:
-            self.humanoidRig = json.load(json_data)
+        # Get settings json
+        with open(settingsPath) as json_data:
+            self.settings = json.load(json_data)
 
-        # Sets up list of bones used by DeepMimic humanoid
-        # Order is important
-        self.deepMimicHumanoidJoints = ["seconds", "hip", "hip", "chest", "neck", "right hip", "right knee", "right ankle",
-                                        "right shoulder", "right elbow", "left hip", "left knee", "left ankle", "left shoulder", "left elbow"]
+        self.scaleFactor = self.settings["scale"]
+        self.deepMimicHumanoidJoints = self.settings["joints"]
+        self.jointDimensions = self.settings["jointDimensions"]
+        self.rotVecDict = self.settings["zeroRotationVectors"]
+        self.rootUp = self.settings["rootRotJoints"]["root rot up"]
+        self.rootLeft = self.settings["rootRotJoints"]["root rot left"]
+        positionChannelNames = self.settings["positionChannelNames"]
+        rotationChannelNames = self.settings["rotationChannelNames"]
 
-        self.jointDimensions = [1, 3, 4, 4, 4, 4, 1, 4, 4, 1, 4, 1, 4, 4, 1]
-
-        # Looking directly at the front of the DeepMimic model, X-axis points at you, Y-axis points straight up, Z-axis points left.
-        # Image of correct deepMimic humanoid bind pose: https://user-images.githubusercontent.com/43953552/61379957-cb485c80-a8a8-11e9-8b78-24f4bf581900.PNG
-        self.rotVecDict = {
-            "seconds": [],
-            "hip": [0, 0, 0],
-            "hip": [0, 0, 0],
-            "chest": [0, 1, 0],
-            "neck": [0, 1, 0],
-            "right hip": [0, -1, 0],
-            "right knee": [0, -1, 0],
-            "right ankle": [1, 0, 0],
-            "right shoulder": [0, -1, 0],
-            "right elbow": [0, -1, 0],
-            "left hip": [0, -1, 0],
-            "left knee": [0, -1, 0],
-            "left ankle": [1, 0, 0],
-            "left shoulder": [0, -1, 0],
-            "left elbow": [0, -1, 0]
-        }
-
+        self.jointData = []
         self.generateJointData()
 
         # Joint tree starting at root
-        self.root = BvhJoint(self.mocap, self.humanoidRig[self.deepMimicHumanoidJoints[1]])
+        self.root = BvhJoint(
+                            self.mocap,
+                            self.settings["jointAssignments"][self.deepMimicHumanoidJoints[1]],
+                            positionChannelNames,
+                            rotationChannelNames, 
+        )
 
     def generateJointData(self):
         assert len(self.deepMimicHumanoidJoints) == len(self.jointDimensions)
-
-        self.jointData = []
 
         for i in range(2, len(self.deepMimicHumanoidJoints)):
             deepMimicBoneName = self.deepMimicHumanoidJoints[i]
@@ -107,7 +92,7 @@ class BvhJointHandler:
         return keyFrames
 
     def bvhBoneName(self, deepMimicBoneName):
-        return self.humanoidRig[deepMimicBoneName]
+        return self.settings["jointAssignments"][deepMimicBoneName]
 
     def getJointOffset(self, bvhJointName):
         return list(self.mocap.joint_offset(bvhJointName))
@@ -186,14 +171,14 @@ class BvhJointHandler:
         # get left hip position
         root_left = BvhJointHandler.normalize(
             self.getRelativeJointTranslation(
-                self.bvhBoneName("root rot left")
+                self.rootLeft
             )
         )
 
         # get spine "up" position (y axis in local root frame)
         y = BvhJointHandler.normalize(
             self.getRelativeJointTranslation(
-                self.bvhBoneName("root rot up")
+                self.rootUp
             )
         )
 
