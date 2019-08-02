@@ -213,7 +213,7 @@ class BvhJointHandler:
         # For 02_01.bvh:
         # self.scaleFactor = (1.0 / 0.45) * 2.54 / 100.0 # = 0.056444
         # For bvh files from http://mocap.cs.sfu.ca/
-        self.scaleFactor = 2.54 / 100.0 + 0.15 / 100
+        self.scaleFactor = 2.54 / 100.0
 
 
     @staticmethod
