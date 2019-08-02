@@ -6,9 +6,11 @@ The [DeepMimic project](https://github.com/xbpeng/DeepMimic) currently offers no
 
 ## Progress
 
-![walkTest1](./Assets/walking_example.gif)
+![Walking_example](./Assets/walking_example.gif)
 
 (GIF has been generated using [this](http://mocap.cs.sfu.ca/nusmocap/0005_Walking001.bvh) mocap file from [this database](http://mocap.cs.sfu.ca/).)
+
+![SpeedVault_example](./Assets/SpeedVault_example.gif)
 
 Watch more videos of recorded conversions [here](https://www.youtube.com/playlist?list=PLd8lridYo1jPV26RsWZIGSJJew9nu4XSF).
 
