@@ -1,8 +1,8 @@
-from JointInfo import JointInfo
 from typing import List
-from BvhExtended import BvhExtended
 import numpy as np
 import math
+from bvhtodeepmimic.joint_info import JointInfo
+from bvhtodeepmimic.bvh_extended import BvhExtended
 
 class BvhJoint:
     def __init__(self, mocap: BvhExtended, name: str,

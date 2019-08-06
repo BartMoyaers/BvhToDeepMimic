@@ -3,10 +3,10 @@ import numpy as np
 import math
 from pyquaternion import Quaternion
 from typing import List
-from BvhExtended import BvhExtended
 from tqdm import tqdm
-from JointInfo import JointInfo
-from BvhJoint import BvhJoint
+from bvhtodeepmimic.bvh_extended import BvhExtended
+from bvhtodeepmimic.joint_info import JointInfo
+from bvhtodeepmimic.bvh_joint import BvhJoint
 
 class BvhJointHandler:
     """ Handles conversion of BVH files to DeepMimic format.

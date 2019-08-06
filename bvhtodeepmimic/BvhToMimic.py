@@ -1,12 +1,12 @@
 # Imports
 # ===========================================================================
 
-from BvhExtended import BvhExtended
+from bvhtodeepmimic.bvh_extended import BvhExtended
 import json
 import os
 from os import listdir
 from os.path import isfile, join
-from BvhJointHandler import BvhJointHandler
+from bvhtodeepmimic.bvh_joint_handler import BvhJointHandler
 
 # Function declarations
 # ===========================================================================
