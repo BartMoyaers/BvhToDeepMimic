@@ -37,7 +37,7 @@ class BvhJointHandler:
                             self.mocap,
                             self.settings["jointAssignments"][self.deepMimicHumanoidJoints[1]],
                             positionChannelNames,
-                            rotationChannelNames, 
+                            rotationChannelNames,
         )
 
     def generateJointData(self):
