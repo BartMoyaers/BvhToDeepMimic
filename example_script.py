@@ -5,7 +5,7 @@ import json
 import os
 from os import listdir
 from os.path import isfile, join
-from bvhtodeepmimic.bvhtomimic import BvhConverter
+from bvhtomimic import BvhConverter
 
 # Function declarations
 # ===========================================================================
