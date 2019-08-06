@@ -8,7 +8,7 @@ class BvhConverter:
 
     def convertBvhFile(self, filePath: str):
         with open(filePath) as bvhFile:
-            mocap = BvhExtended(bvhFile)
+            mocap = BvhExtended(bvhFile.read())
         
         jointHandler = BvhJointHandler(mocap, settingsPath=self.setting_path)
         frames = jointHandler.generateKeyFrames()
