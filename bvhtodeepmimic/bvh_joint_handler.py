@@ -4,9 +4,9 @@ import math
 from pyquaternion import Quaternion
 from typing import List
 from tqdm import tqdm
-from bvhtodeepmimic.bvh_extended import BvhExtended
-from bvhtodeepmimic.joint_info import JointInfo
-from bvhtodeepmimic.bvh_joint import BvhJoint
+from .bvh_extended import BvhExtended
+from .joint_info import JointInfo
+from .bvh_joint import BvhJoint
 
 class BvhJointHandler:
     """ Handles conversion of BVH files to DeepMimic format.
