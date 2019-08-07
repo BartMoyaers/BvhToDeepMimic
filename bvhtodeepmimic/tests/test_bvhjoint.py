@@ -67,8 +67,9 @@ class TestBvhJoint(unittest.TestCase):
         test = self.root._search("NonExistantName")
         self.assertRaises(LookupError)
 
-    
-
+    def test_hasEndSite(self):
+        test = self.root.searchJoint("LeftToeBase")
+        self.assertTrue(test.hasEndSite())
 
 if __name__ == '__main__':
     unittest.main()
