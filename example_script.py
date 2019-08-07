@@ -1,16 +1,14 @@
 # Imports
 # ===========================================================================
 
-from BvhExtended import BvhExtended
 import json
 import os
 from os import listdir
 from os.path import isfile, join
-from BvhJointHandler import BvhJointHandler
+from bvhtomimic import BvhConverter
 
 # Function declarations
 # ===========================================================================
-
 
 def removeAllFilesInDirectory(directory):
     onlyfiles = [f for f in listdir(directory) if isfile(join(directory, f))]
@@ -20,17 +18,18 @@ def removeAllFilesInDirectory(directory):
 
 # Initialization
 # ===========================================================================
-dirname = "./OutputMimic/"
-if not os.path.exists(dirname):
-    os.makedirs(dirname)
+mypath = "./inputBvh/"
+dirnames = ["./OutputMimic/", mypath]
+for dirname in dirnames:
+    if not os.path.exists(dirname):
+        os.makedirs(dirname)
 
-removeAllFilesInDirectory(dirname)
+removeAllFilesInDirectory(dirnames[0])
 
 # Locks root position and rotation for dev testing
 posLocked = False
 
 # sets onlyfiles to a list of files founds in the "mypath" directory
-mypath = "./inputBvh/"
 onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
 
@@ -40,26 +39,16 @@ onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 # for all files to convert
 for j in range(0, len(onlyfiles)):
 
-    with open(f"./OutputMimic/{onlyfiles[j]}.txt", "w") as output:
+    outputPath = f"./OutputMimic/{onlyfiles[j]}.txt"
 
-        # list containing all the frames
-        frames = []
+    # list containing all the frames
+    frames = []
 
-        # open file to convert
-        with open("./inputBvh/" + onlyfiles[j]) as f:
+    # open file to convert
+    inputPath = "./inputBvh/" + onlyfiles[j]
 
-            # Convert file
-            mocap = BvhExtended(f.read())
+    # Convert file
+    converter = BvhConverter("./Settings/settings.json")
 
-            jointHandler = BvhJointHandler(mocap, posLocked=posLocked)
-
-            print("Converting:\t\"" + onlyfiles[j] + "\"")
-            frames = jointHandler.generateKeyFrames()
-
-            # Output in dictionary format for easy json dump
-            outputDict = {
-                "Loop": "none",  # "none" or "wrap"
-                "Frames": frames
-            }
-
-            json.dump(outputDict, output, indent=4)
+    print("Converting:\t\"" + onlyfiles[j] + "\"")
+    converter.writeDeepMimicFile(inputPath, outputPath)

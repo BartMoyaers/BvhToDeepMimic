@@ -3,10 +3,10 @@ import numpy as np
 import math
 from pyquaternion import Quaternion
 from typing import List
-from BvhExtended import BvhExtended
 from tqdm import tqdm
-from JointInfo import JointInfo
-from BvhJoint import BvhJoint
+from .bvh_extended import BvhExtended
+from .joint_info import JointInfo
+from .bvh_joint import BvhJoint
 
 class BvhJointHandler:
     """ Handles conversion of BVH files to DeepMimic format.
@@ -37,7 +37,7 @@ class BvhJointHandler:
                             self.mocap,
                             self.settings["jointAssignments"][self.deepMimicHumanoidJoints[1]],
                             positionChannelNames,
-                            rotationChannelNames, 
+                            rotationChannelNames,
         )
 
     def generateJointData(self):

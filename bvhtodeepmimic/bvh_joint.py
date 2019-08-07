@@ -1,8 +1,8 @@
-from JointInfo import JointInfo
 from typing import List
-from BvhExtended import BvhExtended
 import numpy as np
 import math
+from .joint_info import JointInfo
+from .bvh_extended import BvhExtended
 
 class BvhJoint:
     def __init__(self, mocap: BvhExtended, name: str,
@@ -179,7 +179,7 @@ class BvhJoint:
         return jointPos - parentPos
 
     def hasEndSite(self):
-        return self.mocap.joint_has_end_site(self.name)
+        return self.mocap.joint_name_has_end_site(self.name)
 
     def getEndSiteOffset(self):
         return self.mocap.joint_get_end_site_offset(self.name)

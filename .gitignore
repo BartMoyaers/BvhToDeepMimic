@@ -7,3 +7,6 @@ InputBvh/
 # python
 __pycache__/
 *.pyc
+
+.vscode/*
+*/.vscode/*
