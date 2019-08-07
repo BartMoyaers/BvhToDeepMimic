@@ -35,5 +35,9 @@ class TestBvhJointHandler(unittest.TestCase):
         for i in range(3):
             self.assertAlmostEqual(vec3[i], vec2[i])
 
+    def test_generateKeyFrames(self):
+        frames = self.jointHandler.generateKeyFrames()
+        self.assertEqual(len(frames), 270)
+
 if __name__ == '__main__':
     unittest.main()
