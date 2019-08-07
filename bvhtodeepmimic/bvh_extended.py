@@ -14,6 +14,10 @@ class BvhExtended(Bvh):
     def joint_has_end_site(self, joint):
         return any(True for _ in joint.filter('End'))
 
+    def joint_name_has_end_site(self, name):
+        joint = super().get_joint(name)
+        return self.joint_has_end_site(joint)
+
     def joint_get_end_site_offset(self, name):
         joint = super().get_joint(name)
         if self.joint_has_end_site(joint):

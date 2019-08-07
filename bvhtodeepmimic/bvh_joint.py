@@ -179,7 +179,7 @@ class BvhJoint:
         return jointPos - parentPos
 
     def hasEndSite(self):
-        return self.mocap.joint_has_end_site(self.name)
+        return self.mocap.joint_name_has_end_site(self.name)
 
     def getEndSiteOffset(self):
         return self.mocap.joint_get_end_site_offset(self.name)
