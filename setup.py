@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="bvhtodeepmimic",
-    version="0.0.2",
+    version="0.0.3",
     author="Bart Moyaers",
     author_email="bart.moyaers@gmail.com",
     description="Convert .bvh files (Biovision Hierarchy) to DeepMimic format.",
