@@ -1,4 +1,4 @@
-# BvhToMimic [WIP]
+# BvhToMimic [WIP] [![Build Status](https://travis-ci.org/BartMoyaers/BvhToDeepMimic.svg?branch=master)](https://travis-ci.org/BartMoyaers/BvhToDeepMimic) [![PyPI version](https://badge.fury.io/py/bvhtodeepmimic.svg)](https://badge.fury.io/py/bvhtodeepmimic)
 
 ## Goal
 
