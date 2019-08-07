@@ -23,6 +23,7 @@ install:
 script: python -m unittest || python3 -m unittest
 
 deploy:
+  if: os!=windows
   provider: pypi
   user: BartMoyaers
   password:
