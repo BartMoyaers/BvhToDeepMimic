@@ -19,5 +19,5 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    requires=["pyquaternion", "numpy", "bvh", "tqdm"]
+    install_requires=["pyquaternion", "numpy", "bvh", "tqdm"]
 )
