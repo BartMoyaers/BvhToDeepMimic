@@ -19,8 +19,11 @@ install:
   - pip3 install numpy
   - pip3 install bvh
   - pip3 install tqdm
+  - pip3 install codecov
 
-script: python -m unittest || python3 -m unittest
+script: 
+  - python -m unittest || python3 -m unittest
+  - codecov
 
 deploy:
   provider: pypi
