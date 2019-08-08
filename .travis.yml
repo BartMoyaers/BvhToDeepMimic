@@ -20,9 +20,11 @@ install:
   - pip3 install bvh
   - pip3 install tqdm
   - pip3 install codecov
+  - pip3 install coverage
 
 script: 
-  - python -m unittest || python3 -m unittest
+  # - python -m unittest || python3 -m unittest
+  - coverage run -m unittest
   - codecov
 
 deploy:
