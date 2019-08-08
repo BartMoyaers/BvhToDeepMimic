@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="bvhtodeepmimic",
-    version="0.0.3",
+    version="0.0.4",
     author="Bart Moyaers",
     author_email="bart.moyaers@gmail.com",
     description="Convert .bvh files (Biovision Hierarchy) to DeepMimic format.",
@@ -19,5 +19,6 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    install_requires=["pyquaternion", "numpy", "bvh", "tqdm"]
+    install_requires=["pyquaternion", "numpy", "bvh", "tqdm"],
+    python_requires='>=3.6.*'
 )
