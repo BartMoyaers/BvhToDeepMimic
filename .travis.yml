@@ -23,9 +23,11 @@ install:
 script: python -m unittest || python3 -m unittest
 
 deploy:
-  if: os!=windows
   provider: pypi
   user: BartMoyaers
   password:
     secure: VH8t45RpBP+DmvxmtTsrzOD0KqAwuQWj9rmk0Z/zU9Ds28rdTzY6m5T+UTRvuCBriGJUmixEL49qRLshHXCIK02LiebL0KrvFTeqrDV0t5dCQF/7FW2Nb4svcI13VBEGTu4aW5WKG88OUzCYpNxcvLSTkukJdIVY5D8HCxAPBpHdv8DW2haEeP4Pyqmw+lpZ7F5BWhAgQH85vXerR31pkaxio5GsYWNvOorqN3rgxbhAw4qsdS7l6NHq/3/l7vrbBKmDH1UzXwGI3CtpbFwUa5q/Rao2hjgVzREt4RIrZLS9M+1Qe3qT3/3P522jZeU6sP59+lEP9qln9MuRbF7sZ7fd8gGZ3a21pWJOrCG+DFzOAxCRT+vCb7HRrFKg/MzHD8BtZZ1Cag+6txs7Rprb8F+wBwH+VYTF0bEHqsrlWWMUDZfx42XWE80ltXNFh4+Ei1ilkvGLIUrcQk8rX+KjEFeHQqtqe2fxb962SEkJ9flTSBXUZuRzzQjeQbNQcmQHSmzQT8lihnLYSMBAPVUHgF8Qw3vWL0x3cApgqY8GqEMB8DRYxMl9bF4afDO3/EvWxAb/FK8HGzmZY91nUpa7g90pdLyh29Ik2CF5IUo1K55dXlB15rX52DxG/kvt3H5MNUOmMDsMx3xisnX0Ss5XJD4MEUszgk/VWj2sL/ZI6kI=
   skip_existing: true
+  on:
+    branch: master
+    if: os!=windows
